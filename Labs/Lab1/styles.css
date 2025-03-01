@@ -8,7 +8,7 @@ html {
     width: 100%;
 }
 
-#nav {
+#navigation {
     position: fixed;
     top: 0;
     left: 0;
@@ -31,16 +31,16 @@ nav {
     color: goldenrod;
 }
 
-#nav ul {
+#navigation ul {
     padding-left: 0px;
 }
 
-#nav li {
+#navigation li {
     
     display: inline;
 }
 
-#nav a, #nav a:hover, #nav a:visited, #nav a:active {
+#navigation a, #navigation a:hover, #navigation a:visited, #navigation a:active {
     color: inherit;
     text-decoration: none;
 }
@@ -62,30 +62,20 @@ body {
     min-height: 1080px;
 }
 
-#battles {
-    padding-top: 1%;
-    padding-left: 20%;
-    padding-right: 20%;
-    padding-bottom: 1%;
-}
-
-#planets {
-    padding-top: 1%;
-    padding-left: 20%;
-    padding-right: 20%;
-    padding-bottom: 1%;
-}
-
-#planetInfo, th, td {
-    border: 1px solid white;
-    border-collapse: collapse;
-}
-
+#battles,
+#planets,
 #species {
     padding-top: 1%;
     padding-left: 20%;
     padding-right: 20%;
     padding-bottom: 1%;
+    padding-top: 10px; 
+    scroll-margin-top: 60px;
+}
+
+#planetInfo, th, td {
+    border: 1px solid white;
+    border-collapse: collapse;
 }
 
 th, td {
