@@ -1,0 +1,45 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0 0 100px;
+    padding: 25px;
+    bottom: 75px;
+    background-color: grey;
+    min-height: 1080px;
+}
+
+#title {
+    text-align:center;
+}
+
+#intro {
+    min-width: 100%;
+}
+
+#planetInfo, th, td {
+    border: 1px solid white;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px;
+}
+
+.images {
+    max-width: 30%;
+    min-width: 300px;
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 75px;
+    width: 100%;
+    background-color: antiquewhite;
+    padding-top: 5px;
+    overflow: hidden;
+}
