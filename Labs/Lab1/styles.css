@@ -3,25 +3,89 @@ html {
     min-height: 100%;
 }
 
+#top {
+    background-color: black;
+    width: 100%;
+}
+
+#nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-top: 0;
+    background-color: black;
+    z-index: 100;
+    display: flex;
+    align-items: center; 
+}
+
+#title {
+    text-align:center;
+    color:goldenrod;
+    flex: auto;
+    margin-right: 10%;
+}
+
+nav {
+    color: goldenrod;
+}
+
+#nav ul {
+    padding-left: 0px;
+}
+
+#nav li {
+    
+    display: inline;
+}
+
+#nav a, #nav a:hover, #nav a:visited, #nav a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+nav > a, a:hover, a:visited, a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+#intro {
+    margin-top: 80px;
+    min-width: 100%;
+}
+
 body {
     margin: 0 0 100px;
-    padding: 25px;
     bottom: 75px;
     background-color: grey;
     min-height: 1080px;
 }
 
-#title {
-    text-align:center;
+#battles {
+    padding-top: 1%;
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-bottom: 1%;
 }
 
-#intro {
-    min-width: 100%;
+#planets {
+    padding-top: 1%;
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-bottom: 1%;
 }
 
 #planetInfo, th, td {
     border: 1px solid white;
     border-collapse: collapse;
+}
+
+#species {
+    padding-top: 1%;
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-bottom: 1%;
 }
 
 th, td {
@@ -31,6 +95,7 @@ th, td {
 .images {
     max-width: 30%;
     min-width: 300px;
+    max-height: 400px;
 }
 
 .footer {
