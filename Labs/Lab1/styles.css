@@ -3,13 +3,19 @@ html {
     min-height: 100%;
 }
 
+body {
+    margin: 0 0 100px;
+    bottom: 75px;
+    background-color: grey;
+    min-height: 1080px;
+}
+
 #header {
     background-color: black;
     width: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
     margin-top: 0;
     z-index: 100;
     align-items: center;
@@ -32,21 +38,15 @@ nav > a, a:hover, a:visited, a:active {
 }
 
 #intro {
+    background-color: black;
     margin-top: 80px;
     min-width: 100%;
-}
-
-body {
-    margin: 0 0 100px;
-    bottom: 75px;
-    background-color: grey;
-    min-height: 1080px;
 }
 
 #battles,
 #planets,
 #species {
-    padding-top: 1%;
+    padding-top: 10%;
     padding-left: 20%;
     padding-right: 20%;
     padding-bottom: 1%;
