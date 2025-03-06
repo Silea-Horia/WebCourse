@@ -3,46 +3,27 @@ html {
     min-height: 100%;
 }
 
-#top {
+#header {
     background-color: black;
     width: 100%;
-}
-
-#navigation {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     margin-top: 0;
-    background-color: black;
     z-index: 100;
-    display: flex;
-    align-items: center; 
+    align-items: center;
 }
 
 #title {
+    width:50%;
+    margin:0 auto;
     text-align:center;
     color:goldenrod;
-    flex: auto;
-    margin-right: 10%;
 }
 
 nav {
     color: goldenrod;
-}
-
-#navigation ul {
-    padding-left: 0px;
-}
-
-#navigation li {
-    
-    display: inline;
-}
-
-#navigation a, #navigation a:hover, #navigation a:visited, #navigation a:active {
-    color: inherit;
-    text-decoration: none;
 }
 
 nav > a, a:hover, a:visited, a:active {
