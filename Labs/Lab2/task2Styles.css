@@ -1,4 +1,4 @@
-#div1 {
+.div1 {
     background-color: blueviolet;
     position:fixed;
     padding:0;
@@ -9,7 +9,7 @@
     height: 100%;
 }
 
-#div2 {
+.div2 {
     background-color: red;
     margin: 15% 15%;
     height: 70%; 
@@ -17,7 +17,7 @@
     position: absolute;
 }
 
-#div3 {
+.div3 {
     background-color: green;
     margin: 15% 15%;
     height: 70%; 
@@ -25,10 +25,26 @@
     position: absolute;
 }
 
-#div4 {
+.div4 {
     background-color: yellow;
     margin: 15% 15%;
     height: 70%; 
     width: 70%;
     position: absolute;
+}
+
+.div4:hover {
+    background-color: blueviolet;
+}
+
+.div3:has(.div4:nth-of-type(1):hover) {
+    background-color: yellow;
+}
+
+.div2:has(.div4:nth-of-type(1):hover) {
+    background-color: blue;
+}
+
+.div1:has(.div4:nth-of-type(1):hover) {
+    background-color: red;
 }
