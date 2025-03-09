@@ -37,12 +37,12 @@
     background-color: blueviolet;
 }
 
-.div3:has(.div4:nth-of-type(1):hover) {
+.div3:has(>.div4:hover) { /* has a chid */
     background-color: yellow;
 }
 
-.div2:has(.div4:nth-of-type(1):hover) {
-    background-color: blue;
+.div2:has(.div4:nth-of-type(1):hover) { /* nth sibling of its type */
+    background-color: green;
 }
 
 .div1:has(.div4:nth-of-type(1):hover) {
