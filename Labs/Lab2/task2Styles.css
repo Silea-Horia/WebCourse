@@ -34,7 +34,7 @@
 }
 
 .div4:hover {
-    background-color: blueviolet;
+    background-color: blue;
 }
 
 .div3:has(>.div4:hover) { /* has a chid */
