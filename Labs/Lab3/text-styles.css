@@ -1,0 +1,44 @@
+.bold {
+    font-weight: bold;
+}
+
+.light {
+    color: #c0c4fc;
+}
+
+.dark {
+    color: #6d28d2;
+}
+
+.white {
+    color: white;
+}
+
+.link {
+    color: #c0c4fc;
+    text-decoration: underline;
+}
+
+.yellow {
+    color: yellow;
+}
+
+.gray {
+    color: gray;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+}
+
+.red {
+    color: red;
+}
+
+.small {
+    font-size: small;
+}
+
+.center {
+    text-align: center;
+}
