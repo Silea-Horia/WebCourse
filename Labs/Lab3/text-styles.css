@@ -35,6 +35,10 @@
     color: red;
 }
 
+.red {
+    color: black;
+}
+
 .small {
     font-size: small;
 }

@@ -24,11 +24,10 @@
 
 .button {
     border-radius: 5px;
-    box-sizing: border-box;
     line-height: 3em;
     padding: 0 1.2em;  
     max-width: 100%;
-    min-width: 8rem;
+    /* min-width: 8rem; */
 }
 
 .strong-bottom {
@@ -36,11 +35,12 @@
 }
 
 .offer {
-    width: 100%;
+    width: 98%;
     top: 0;
     left: 0;
     margin-top: 0;
     text-align: center;
+    padding: 1%;
 }
 
 .top-bar {
@@ -60,7 +60,7 @@
     border-color: #ccc;
     border-radius: 100px;
     overflow: hidden;
-    height: 2; 
+    height: 3em; 
     width: 50%;
 }
 
@@ -157,11 +157,13 @@ li::before {
     margin-right: 5px;
 }
 
+.icon {
+    max-width: 20px;
+    max-height: 20px;
+}
+
 .column {
     width: 48%;
-    display: inline-block;
-    vertical-align: top;
-    box-sizing: border-box;
 }
 
 .column:first-child {
@@ -174,14 +176,15 @@ li::before {
 
 .sidebar {
     position: absolute;
-    top: 200px;
-    right: 200px;
+    top: 175px;
+    right: 220px;
     z-index: 10; 
     box-shadow: black 0px 4px 8px;
+    max-width: 350px;
 }
 
 .sidebar img {
-    max-width: 400px;
+    max-width: 350px;
     
 }
 
@@ -210,9 +213,68 @@ li::before {
 
 .options {
     align-items: center;
+    margin-bottom: 1em;
+    font-size: small;
 }
 
 .options>p{
-    padding-bottom: 0;
     border-bottom: 1px solid #6d28d2;
+}
+
+.applied-coupon {
+    border: 1px dashed gray;
+    padding: 0.5em;
+    max-width: 94%;
+}
+
+.applied-coupon>p {
+    line-height: 1em;
+}
+
+.enter-coupon-container {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    width: 90%;
+}
+
+.enter-coupon-container>input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    outline: none; 
+    border-radius: 4px;
+}
+
+.enter-coupon-container>button {
+    flex-grow: 1;
+    border-radius: 5px;
+    line-height: 3em;
+    padding: 0 1.2em;  
+    min-width: 7em;
+    max-width: 100%;
+}
+
+
+.subscribe {
+    line-height: 1.2em;
+}
+
+.subscribe>h2{
+    margin-bottom: 1em;
+}
+
+.subscribe>p{
+    margin-bottom: 1em;
+}
+
+.related-topics {
+    margin-top: 2em;
+}
+
+.related-topics>.row{
+    gap: 10px;
+}
+
+.small-icon {
+    max-height: 15px;
+    max-width: 15px;
 }
