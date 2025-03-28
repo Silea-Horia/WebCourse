@@ -1,7 +1,7 @@
 * {
     padding: 0;
     margin: 0;
-    font-family: sans-serif;
+    font-family: Arial;
 }
 
 .row {
@@ -130,6 +130,7 @@
     padding-left: 20%;
     padding-right: 40%;
     padding-bottom: 3%;
+    
 }
 
 .what-learn {
@@ -268,6 +269,7 @@ li::before {
 
 .related-topics {
     margin-top: 2em;
+    margin-bottom: 50px;
 }
 
 .related-topics>.row{
