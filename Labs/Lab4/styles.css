@@ -1,0 +1,19 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.main-menu {
+    margin: 3px;
+}
+
+.principal-submenus {
+    display: none;
+    position: absolute;
+    width: 100%;
+    margin-left: 10px;
+}
+
+.submenu {
+    margin: 3px;
+}
