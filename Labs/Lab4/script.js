@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const mainButton = document.getElementsByClassName("main-menu")[0];
-    mainButton.addEventListener("click", display_principal_submenus);
+    const buttons = document.getElementsByClassName("dropdown-button");
+    for (let button of buttons) // in enumerates over keys, while of enumerates over values
+        button.addEventListener("click", display_children);
 });
 
-function display_principal_submenus() {
-    const submenuContainer = document.getElementsByClassName("principal-submenus")[0];
-    submenuContainer.style.display = submenuContainer.style.display == "none" ? "block" : "none";
+function display_children(event) {
+    const sender = event.target;
+    const container = sender.nextElementSibling;
+    const currentDisplay = window.getComputedStyle(container).display;  // because when set in css, the display is "", not "none"
+    container.style.display = currentDisplay == "none" ? "block" : "none";
 }

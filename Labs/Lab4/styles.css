@@ -3,17 +3,20 @@
     display: inline-block;
 }
 
-.main-menu {
+.dropdown-button {
     margin: 3px;
 }
 
-.principal-submenus {
-    display: none;
+.submenus {
     position: absolute;
     width: 100%;
-    margin-left: 10px;
 }
 
-.submenu {
+.components {
+    margin-left: 10px;
+    display: none;
+}
+
+.component {
     margin: 3px;
 }
