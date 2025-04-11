@@ -9,7 +9,7 @@
 
 .submenus {
     position: absolute;
-    width: 100%;
+    width: 50%;
 }
 
 .components {
@@ -19,4 +19,8 @@
 
 .component {
     margin: 3px;
+}
+
+a {
+    background-color: lightblue;
 }

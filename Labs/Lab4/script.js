@@ -8,5 +8,16 @@ function display_children(event) {
     const sender = event.target;
     const container = sender.nextElementSibling;
     const currentDisplay = window.getComputedStyle(container).display;  // because when set in css, the display is "", not "none"
-    container.style.display = currentDisplay == "none" ? "block" : "none";
+    
+    if (currentDisplay == "none") {
+        container.style.display = "flex";
+        container.style.flexDirection = "row";
+    }
+    else {
+        container.style.display = "none";
+    }
+    
+    // container.style.display = currentDisplay == "none" ? "block" : "none";
+    // container.style.display = "flex";
+    // container.style.flexDirection = "row";
 }
