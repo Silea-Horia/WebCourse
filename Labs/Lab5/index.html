@@ -3,9 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-
+    <link href="styles.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 </head>
 <body>
-
 </body>
+<script>
+    let initialX = 0;
+    let initialY = 0;
+    let isDragging = false;
+
+    $(document).on('mousedown', function(e) {
+        initialX = e.pageX;
+        initialY = e.pageY;
+        isDragging = true;
+    });
+
+    $(document).on('mouseup', function() {
+        isDragging = false;
+
+    });
+
+    $(document).on('mousemove', function(e) {
+        const x = e.pageX / $(window).width() * 100;
+        const y = e.pageY / $(window).height() * 100;
+
+        $('body').css('background', 'radial-gradient(circle at ' + x + '% ' + y + '%, yellow, green)');
+
+        if (isDragging) {
+            const distance = Math.sqrt(Math.abs(initialX - e.pageX) ** 2 + Math.abs(initialY - e.pageY) ** 2);
+
+            $('body').css('background', 'radial-gradient(circle at ' + x + '% ' + y + '%, yellow ' + distance / 2 + '%, green)');
+        }
+    });
+</script>
 </html>
