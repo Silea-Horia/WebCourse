@@ -1,23 +1,69 @@
 <?php
-    $conn = new mysqli("localhost", "root", "", "ecommerce");
+    $conn = establishConnection();
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+    $category = $_GET["Category"];
+
+    $allProducts = getAllProductsByCategory($conn, $category);
+
+    $page = $_GET["Page"];
+
+    $paginatedProducts = getPaginatedProducts($allProducts, $page);
+
+    echo "<ul>";
+    foreach ($paginatedProducts as $product) {
+        echo "<li>" . $product . "</li>";
     }
-
-    $sql = "SELECT p.Name Name
-            FROM Product p INNER JOIN Category g ON p.CategoryId = g.Id
-            WHERE g.Name = \"" . $_GET["Category"] . "\"";
-
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        echo "<ul>";
-        while ($row = $result->fetch_assoc()) {
-            echo "<li>" . $row['Name'] . "</li>";
-        }
-        echo "</ul>";
-    }
+    echo "</ul>";
 
     $conn->close();
+
+    function establishConnection() {
+        $connection = new mysqli("localhost", "root", "", "ecommerce");
+
+        if ($connection->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        return $connection;
+    }
+
+    function getAllProductsByCategory($conn, $category) {
+        $sql = "SELECT p.Name Name
+            FROM Product p INNER JOIN Category g ON p.CategoryId = g.Id
+            WHERE g.Name = \"" . $category . "\"";
+
+        $result = $conn->query($sql);
+
+        $products = array();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $products[] = $row['Name'];
+            }
+        }
+
+        return $products;
+    }
+
+    function getPaginatedProducts($products, $page) {
+        $numberOfProducts = count($products);
+        $productsPerPage = 4;
+
+        $numberOfPages = ceil($numberOfProducts / $productsPerPage);
+
+        $currentProducts = array();
+
+        $startIndex = ($page - 1) * $productsPerPage;
+        $endIndex = $page * $productsPerPage;
+
+        if ($endIndex > $numberOfProducts) {
+            $endIndex = $numberOfProducts;
+        }
+
+        for ($i = $startIndex; $i < $endIndex; $i++) {
+            $currentProducts[] = $products[$i];
+        }
+
+        return $currentProducts;
+    }
 ?>

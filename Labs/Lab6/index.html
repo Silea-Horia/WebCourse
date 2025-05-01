@@ -6,10 +6,19 @@
         <link href="styles.css" rel="stylesheet" >
     </head>
     <body>
-        <div class="buttons"></div>
+        <div class="category-buttons"></div>
         <ul class="product-list"></ul>
+        <div class="page-buttons">
+            <ul>
+                <button id="prev-button" onclick="previousPage()">Previous</button>
+                <button id="next-button" onclick="nextPage()">Next</button>
+            </ul>
+        </div>
     </body>
     <script>
+        let page = 1;
+        let currentCategory = "";
+
         $(document).ready(function() {
             setCategoriesButtons();
             
@@ -20,205 +29,47 @@
                 type: "GET",
                 url: "getCategories.php",
                 success: function(data, status) {
-                    $(".buttons").html(data);
+                    $(".category-buttons").html(data);
                 }
             });
         }
 
         function setCategory(category) {
             console.log(category);
+            
+            currentCategory = category;
+            page = 1;
+            
+            populateCategory();
+        }
+
+        function populateCategory() {
+            if (page == 1) {
+                document.getElementById("prev-button").disabled = true;
+            } else {
+                document.getElementById("prev-button").disabled = false;
+            }
+
             $.ajax({
                 type: "GET",
                 url: "getProducts.php",
-                data: {"Category" : category},
+                data: {"Category" : currentCategory, "Page" : page},
                 success: function(data, status) {
                     $(".product-list").html(data);
                 }
             });
         }
+
+        function previousPage() {
+            page = page - 1;
+
+            populateCategory();
+        }
+
+        function nextPage() {
+            page = page + 1;
+
+            populateCategory();
+        }
     </script>
 </html>
-<!-- <?php
-    $conn = new mysqli("localhost", "root", "", "ecommerce");
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    function get_categories($conn) {
-        $sql = "SELECT Name FROM Category";
-        $result = $conn->query($sql);
-        $categories = array();
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $categories[] = $row;
-            }
-        }
-        return $categories;
-    }
-    
-// // Function to get products by category, with pagination
-// function get_products_by_category($conn, $category_id, $page = 1, $products_per_page = 4) {
-//     $start_from = ($page - 1) * $products_per_page;
-//     $sql = "SELECT product_id, product_name, product_description, product_price, product_image 
-//             FROM products 
-//             WHERE category_id = ?";
-
-//     $stmt = $conn->prepare($sql);
-//     $stmt->bind_param("i", $category_id);
-//     $stmt->bind_param("i", $category_id);
-//     $stmt->execute();
-//     $result = $stmt->get_result();
-
-//     $products = array();
-//     if ($result->num_rows > 0) {
-//         while ($row = $result->fetch_assoc()) {
-//             $products[] = $row;
-//         }
-//     }
-
-//      // Get total number of products for this category
-//      $sql_count = "SELECT COUNT(*) as total FROM products WHERE category_id = ?";
-//      $stmt_count = $conn->prepare($sql_count);
-//      $stmt_count->bind_param("i", $category_id);
-//      $stmt_count->execute();
-//      $result_count = $stmt_count->get_result();
-//      $total_products = $result_count->fetch_assoc()['total'];
-//      $total_pages = ceil($total_products / $products_per_page);
-
-//     return array('products' => $products, 'total_pages' => $total_pages);
-// }
-
-// // Function to get a single product
-// function get_product($conn, $product_id) {
-//     $sql = "SELECT product_id, product_name, product_description, product_price, product_image, category_id 
-//             FROM products 
-//             WHERE product_id = ?";
-//     $stmt = $conn->prepare($sql);
-//     $stmt->bind_param("i", $product_id);
-//     $stmt->execute();
-//     $result = $stmt->get_result();
-//     if ($result->num_rows == 1) {
-//         return $result->fetch_assoc();
-//     } else {
-//         return null;
-//     }
-// }
-
-// // Function to add a product to the database
-// function add_product($conn, $product_name, $product_description, $product_price, $product_image, $category_id) {
-//     $product_name = sanitize_input($conn, $product_name);
-//     $product_description = sanitize_input($conn, $product_description);
-//     $product_price = sanitize_input($conn, $product_price);
-//     $product_image = sanitize_input($conn, $product_image); // You might want to handle file uploads differently
-//      $category_id = sanitize_input($conn, $category_id);
-
-//     $sql = "INSERT INTO products (product_name, product_description, product_price, product_image, category_id) 
-//             VALUES (?, ?, ?, ?, ?)";
-//     $stmt = $conn->prepare($sql);
-//     $stmt->bind_param("ssdss", $product_name, $product_description, $product_price, $product_image, $category_id);
-
-//     if ($stmt->execute()) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
-
-// // Function to update a product in the database
-// function update_product($conn, $product_id, $product_name, $product_description, $product_price, $product_image, $category_id) {
-//     $product_id = sanitize_input($conn, $product_id);
-//     $product_name = sanitize_input($conn, $product_name);
-//     $product_description = sanitize_input($conn, $product_description);
-//     $product_price = sanitize_input($conn, $product_price);
-//     $product_image = sanitize_input($conn, $product_image);  // You might want to handle file uploads differently
-//     $category_id = sanitize_input($conn, $category_id);
-
-//     $sql = "UPDATE products 
-//             SET product_name = ?, product_description = ?, product_price = ?, product_image = ?, category_id = ?
-//             WHERE product_id = ?";
-//     $stmt = $conn->prepare($sql);
-//     $stmt->bind_param("ssdssi", $product_name, $product_description, $product_price, $product_image, $category_id, $product_id);
-
-//     if ($stmt->execute()) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
-
-// // Function to delete a product from the database
-// function delete_product($conn, $product_id) {
-//     $product_id = sanitize_input($conn, $product_id);
-//     $sql = "DELETE FROM products WHERE product_id = ?";
-//     $stmt = $conn->prepare($sql);
-//     $stmt->bind_param("i", $product_id);
-//     if ($stmt->execute()) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
-
-// // Function to add a product to the shopping cart (session-based)
-// function add_to_cart($product_id, $quantity = 1) {
-//     if (!isset($_SESSION['cart'])) {
-//         $_SESSION['cart'] = array();
-//     }
-//     if (isset($_SESSION['cart'][$product_id])) {
-//         $_SESSION['cart'][$product_id] += $quantity;
-//     } else {
-//         $_SESSION['cart'][$product_id] = $quantity;
-//     }
-// }
-
-// // Function to remove a product from the shopping cart
-// function remove_from_cart($product_id) {
-//     if (isset($_SESSION['cart'][$product_id])) {
-//         unset($_SESSION['cart'][$product_id]);
-//     }
-// }
-
-// // Function to get the contents of the shopping cart
-// function get_cart_items($conn) {
-//      if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
-//         return array();
-//     }
-
-//     $cart_items = array();
-//     $product_ids = array_keys($_SESSION['cart']);
-//     $placeholders = implode(',', array_fill(0, count($product_ids), '?')); // Create placeholders for prepared statement
-//     $sql = "SELECT product_id, product_name, product_price, product_image FROM products WHERE product_id IN ($placeholders)";
-
-//     $stmt = $conn->prepare($sql);
-//     $types = str_repeat('i', count($product_ids)); // Bind parameters as integers
-//     $stmt->bind_param($types, ...$product_ids);  // Use ... to expand the array into individual parameters
-//     $stmt->execute();
-//     $result = $stmt->get_result();
-
-
-//     if ($result->num_rows > 0) {
-//         while ($row = $result->fetch_assoc()) {
-//             $product_id = $row['product_id'];
-//             $cart_items[] = array(
-//                 'product_id' => $product_id,
-//                 'product_name' => $row['product_name'],
-//                 'product_price' => $row['product_price'],
-//                 'product_image' => $row['product_image'],
-//                 'quantity' => $_SESSION['cart'][$product_id]
-//             );
-//         }
-//     }
-//     return $cart_items;
-// }
-
-// // Function to calculate the total price of the shopping cart
-// function get_cart_total($conn) {
-//     $cart_items = get_cart_items($conn);
-//     $total = 0;
-//     foreach ($cart_items as $item) {
-//         $total += $item['product_price'] * $item['quantity'];
-//     }
-//     return $total;
-// }
-?> -->
