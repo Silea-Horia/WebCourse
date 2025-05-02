@@ -7,14 +7,18 @@
 
     $page = $_GET["Page"];
 
+    define("productsPerPage", 4);
+
     $paginatedProducts = getPaginatedProducts($allProducts, $page);
 
-    echo "<ul>";
-    foreach ($paginatedProducts as $product) {
-        echo "<li>" . $product . "</li>";
-    }
-    echo "</ul>";
+    $totalPages = getTotalPages($allProducts);
 
+    header("Content-Type: application/json"); 
+    echo json_encode([
+        "products" => $paginatedProducts,
+        "totalPages" => $totalPages
+    ]);
+    
     $conn->close();
 
     function establishConnection() {
@@ -47,14 +51,13 @@
 
     function getPaginatedProducts($products, $page) {
         $numberOfProducts = count($products);
-        $productsPerPage = 4;
 
-        $numberOfPages = ceil($numberOfProducts / $productsPerPage);
+        $numberOfPages = ceil($numberOfProducts / productsPerPage);
 
         $currentProducts = array();
 
-        $startIndex = ($page - 1) * $productsPerPage;
-        $endIndex = $page * $productsPerPage;
+        $startIndex = ($page - 1) * productsPerPage;
+        $endIndex = $page * productsPerPage;
 
         if ($endIndex > $numberOfProducts) {
             $endIndex = $numberOfProducts;
@@ -65,5 +68,11 @@
         }
 
         return $currentProducts;
+    }
+
+    function getTotalPages($products) {
+        $numberOfProducts = count($products);
+
+        return ceil($numberOfProducts / productsPerPage);
     }
 ?>

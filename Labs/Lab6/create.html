@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ecommerce</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <link href="styles.css" rel="stylesheet" >
+    </head>
+    <body>
+        <form action="createProduct.php" method="post">
+            Name: <input type="text" name="pname" />
+            Price: <input type="text" name="price" />
+            Category: <select id="category-options" name="category"></select>
+            <input type="submit" />
+        </form>         
+        <button onclick="navigateBack()">Go back</button>
+    </body>
+    <script>
+        $(document).ready(function() {
+            populateCategoryOptions();
+        });
+
+        function populateCategoryOptions() {
+            $.ajax({
+                type: "GET",
+                url: "getCategories.php",
+                success: function(data, status) {
+                    let categories = data.categories;
+
+                    let categoryOptions = document.getElementById("category-options");
+
+                    for (let category of categories) {
+                        let option = document.createElement("option");
+                        option.textContent = category;
+
+                        categoryOptions.appendChild(option);
+                    }
+                }
+            });
+        }
+
+        function navigateBack() {
+            window.location.href = "index.html";
+        }
+    </script>
+</html>

@@ -7,13 +7,18 @@
 
     $sql = "SELECT Name FROM Category";
     $result = $conn->query($sql);
+    $categories = array();
+
     if ($result->num_rows > 0) {
-        echo "<ul>";
         while ($row = $result->fetch_assoc()) {
-            echo "<button onClick=\"setCategory('" . $row['Name'] . "')\">" . $row['Name'] . "</button>";
+            $categories[] = $row['Name'];
         }
-        echo "</ul>";
     }
+
+    header("Content-Type: application/json"); 
+    echo json_encode([
+        "categories" => $categories
+    ]);
 
     $conn->close();
 ?>

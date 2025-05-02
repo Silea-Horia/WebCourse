@@ -6,22 +6,40 @@
         <link href="styles.css" rel="stylesheet" >
     </head>
     <body>
+        <div id="cart-container">
+            <button id="cart-button" onclick="setCartDisplay()">View cart</button>
+            <table id="cart-table">
+                <tr>
+                    <th>Product Name</th>
+                    <th>Amount</th>
+                </tr>
+            </table>
+        </div>
         <div class="category-buttons"></div>
-        <ul class="product-list"></ul>
+        <div id="product-list"></div>
         <div class="page-buttons">
             <ul>
                 <button id="prev-button" onclick="previousPage()">Previous</button>
                 <button id="next-button" onclick="nextPage()">Next</button>
             </ul>
         </div>
+        <div class="action-buttons">
+            <button id="add-button" onclick="navigateToCreate()">Create Product</button>
+        </div>
     </body>
     <script>
         let page = 1;
         let currentCategory = "";
+        let totalPages = 0;
+        let shoppingCart = {};
 
         $(document).ready(function() {
             setCategoriesButtons();
             
+            document.getElementById("prev-button").disabled = true;
+            document.getElementById("next-button").disabled = true;
+
+            document.getElementById("cart-table").style.visibility = "collapse";
         });
 
         function setCategoriesButtons() {
@@ -29,9 +47,21 @@
                 type: "GET",
                 url: "getCategories.php",
                 success: function(data, status) {
-                    $(".category-buttons").html(data);
+                    createCategoryList(data.categories);
                 }
             });
+        }
+
+        function createCategoryList(categories) {
+            let categoryContainer = document.getElementsByClassName("category-buttons")[0];
+
+            for (let category of categories) {
+                let button = document.createElement("button");
+                button.textContent = category;
+                button.onclick = function () { setCategory(category); };
+
+                categoryContainer.appendChild(button);
+            }
         }
 
         function setCategory(category) {
@@ -39,37 +69,157 @@
             
             currentCategory = category;
             page = 1;
-            
+
             populateCategory();
         }
 
         function populateCategory() {
-            if (page == 1) {
-                document.getElementById("prev-button").disabled = true;
-            } else {
-                document.getElementById("prev-button").disabled = false;
-            }
+            document.getElementById("prev-button").disabled = (page == 1);
+            document.getElementById("next-button").disabled = (page == totalPages);
 
             $.ajax({
                 type: "GET",
                 url: "getProducts.php",
                 data: {"Category" : currentCategory, "Page" : page},
                 success: function(data, status) {
-                    $(".product-list").html(data);
+                    totalPages = data.totalPages;
+                    createProductList(data.products);
                 }
             });
         }
 
-        function previousPage() {
-            page = page - 1;
+        function createProductList(products) {
+            const list = document.createElement("ul");
 
-            populateCategory();
+            for (let product of products) {
+                let listItem = document.createElement("li");
+                let productSpan = document.createElement("span");
+                productSpan.textContent = product;
+                listItem.appendChild(productSpan);
+                let addButton = document.createElement("button");
+                addButton.onclick = function(){ addProductToCartAndUpdate(product); };
+                addButton.innerHTML = "add";
+                listItem.appendChild(addButton);
+                list.appendChild(listItem);
+            }
+
+            let productList = document.getElementById("product-list");
+            productList.innerHTML = "";
+            productList.appendChild(list);
+            productList.style.marginLeft = "50px";
+            productList.style.height = "100px";
+        }
+
+        function addProductToCartAndUpdate(productName) {
+            console.log("added " + productName + " to cart");
+
+            if (isNaN(shoppingCart[productName])) {
+                shoppingCart[productName] = 1;
+            }
+            else {
+                shoppingCart[productName] = shoppingCart[productName] + 1;
+            }
+
+            console.log("new amount: " + shoppingCart[productName]);
+
+            populateCart();
+        }
+
+        function previousPage() {
+            if (page > 1) {
+                page = page - 1;
+
+                populateCategory();
+            }
         }
 
         function nextPage() {
-            page = page + 1;
+            if (page < totalPages) {
+                page = page + 1;
 
-            populateCategory();
+                populateCategory();
+            }
         }
+
+        function setCartDisplay() {
+            let cartTable = document.getElementById("cart-table");
+
+            if (cartTable.style.visibility == "visible") {
+                cartTable.style.visibility = "collapse";
+                return;
+            }
+
+            populateCart();
+
+        }
+
+        function populateCart() {
+            let cartTable = document.getElementById("cart-table");
+
+            //console.log("populating cart... ");
+
+            cartTable.style.visibility = "visible";
+            cartTable.innerHTML = "<tr><th>Product Name</th><th>Amount</th><th>Add</th><th>Remove</th></tr>";
+
+
+            for (let [productName, amount] of Object.entries(shoppingCart)) {
+                //console.log(productName + " " + amount);   
+
+                let tableRow = document.createElement("tr");
+
+                let tableProductName = document.createElement("td");
+                tableProductName.textContent = productName;
+
+                let tableProductAmount = document.createElement("td");
+                tableProductAmount.textContent = amount;
+
+                let addProduct = document.createElement("td");
+                let addButton = document.createElement("button");
+                addButton.textContent = "Add";
+                addButton.onclick = function() { addProductToCartAndUpdate(productName); };
+                addProduct.appendChild(addButton);
+
+                
+                let removeProduct = document.createElement("td");
+                let removeButton = document.createElement("button");
+                removeButton.textContent = "Remove";
+                removeButton.onclick = function() { removeFromCart(productName); };
+                removeProduct.appendChild(removeButton);
+
+                tableRow.appendChild(tableProductName);
+                tableRow.appendChild(tableProductAmount);
+                tableRow.appendChild(addProduct);
+                tableRow.appendChild(removeProduct);
+
+                cartTable.appendChild(tableRow);
+            }
+        }
+        
+
+        function removeFromCart(productName) {
+            console.log("remove " + productName + " from cart");
+
+            if (isNaN(shoppingCart[productName])) {
+                console.error("Product is not in cart!");
+                return;
+            }
+
+            shoppingCart[productName]--;
+
+            if (shoppingCart[productName] == 0) {
+                shoppingCart = Object.fromEntries(
+                    Object.entries(shoppingCart).filter(([key]) => key != productName)
+                );
+            }
+
+            console.log("new amount: " + shoppingCart[productName]);
+
+            populateCart();
+        }
+
+        function navigateToCreate() {
+            window.location.href = "create.html";
+        }
+
     </script>
 </html>
