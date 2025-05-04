@@ -9,10 +9,6 @@
         <div id="cart-container">
             <button id="cart-button" onclick="setCartDisplay()">View cart</button>
             <table id="cart-table">
-                <tr>
-                    <th>Product Name</th>
-                    <th>Amount</th>
-                </tr>
             </table>
         </div>
         <div class="category-buttons"></div>
@@ -71,7 +67,15 @@
                         } else {
                             formMessage.html('<p style="color: red;">Error: ' + response.error + '</p>');
                         }
-                        populateCategory();
+                        let id = document.getElementById("product-id-field").value;
+                        let newName = document.getElementById("product-name-field").value;
+                        let newPrice = document.getElementById("product-price-field").value;
+                        if (shoppingCart[id]) {
+                            shoppingCart[id][2].name = newName;
+                            shoppingCart[id][2].price = newPrice;
+
+                        }
+                        populateItemPage();
                         populateCart();
                     },
                     error: function(xhr, status, error) {
@@ -81,26 +85,36 @@
             })
         });
 
-        function setCategoriesButtons() {
-            $.ajax({
-                type: "GET",
-                url: "getCategories.php",
-                success: function(data, status) {
-                    createCategoryList(data.categories);
-                }
-            });
-        }
+        async function setCategoriesButtons() {
+            let categories = await getCategories();
 
-        function createCategoryList(categories) {
             let categoryContainer = document.getElementsByClassName("category-buttons")[0];
 
             for (let category of categories) {
-                let button = document.createElement("button");
-                button.textContent = category;
-                button.onclick = function () { setCategory(category); };
-
+                let button = createCategoryButton(category);
                 categoryContainer.appendChild(button);
             }
+        }
+
+        async function getCategories() {
+            let categories;
+            await $.ajax({
+                type: "GET",
+                url: "getCategories.php",
+                success: function(data, status) {
+                    categories = data.categories;
+                }
+            });
+
+            return categories;
+        }
+
+        function createCategoryButton(category) {
+            let button = document.createElement("button");
+            button.textContent = category;
+            button.onclick = function () { setCategory(category); };
+            
+            return button;
         }
 
         function setCategory(category) {
@@ -109,12 +123,15 @@
             currentCategory = category;
             page = 1;
 
-            populateCategory();
+            populateItemPage();
         }
 
-        function populateCategory() {
-            document.getElementById("prev-button").disabled = (page == 1);
-            document.getElementById("next-button").disabled = (page == totalPages);
+        function populateItemPage() {
+            let prevButton = document.getElementById("prev-button");
+            let nextButton = document.getElementById("next-button");
+
+            prevButton.disabled = isFirstPage();
+            nextButton.disabled = isLastPage();
 
             $.ajax({
                 type: "GET",
@@ -127,40 +144,19 @@
             });
         }
 
+        function isFirstPage() {
+            return page == 1;
+        }
+
+        function isLastPage() {
+            return page == totalPages;
+        }
+
         function createProductList(products) {
-            const table = document.createElement("table");
-            table.id = "product-table";
+            let table = createTable();
 
             for (let product of products) {
-                let tableRow = document.createElement("tr");
-
-                let productName = document.createElement("td");
-                productName.textContent = product.name;
-                productName.onclick = function() {
-                    displayProductDetails(product);
-                };
-                productName.style.cursor = "help";
-                tableRow.appendChild(productName);
-
-                
-                let price = document.createElement("td");
-                price.textContent = product.price;
-                price.style.cursor = "default";
-                tableRow.appendChild(price);
-                
-                let addCell = document.createElement("td");
-                let addButton = document.createElement("button");
-                addButton.onclick = function(){ addProductToCartAndUpdate(product); };
-                addButton.innerHTML = "add";
-                addCell.appendChild(addButton);
-                tableRow.appendChild(addCell);
-                
-                let deleteCell = document.createElement("td");
-                let deleteButton = document.createElement("button");
-                deleteButton.onclick = function(){ deleteProduct(product); };
-                deleteButton.innerHTML = "delete";
-                deleteCell.appendChild(deleteButton);
-                tableRow.appendChild(deleteCell);
+                let tableRow = createProductRow(product);
 
                 table.appendChild(tableRow);
             }
@@ -168,34 +164,214 @@
             let productList = document.getElementById("product-list");
             productList.innerHTML = "";
             productList.appendChild(table);
-            productList.style.marginLeft = "50px";
-            productList.style.height = "100px";
+        }
+
+        function createTable() {
+            let table = document.createElement("table");
+            table.id = "product-table";
+            return table;
+        }
+
+        function createProductRow(product) {
+            let tableRow = document.createElement("tr");
+
+            let nameCell = createNameCell(product);
+            tableRow.appendChild(nameCell);
+
+            
+            let priceCell = createPriceCell(product);
+            tableRow.appendChild(priceCell);
+            
+            let addCell = createAddCell(product);
+            tableRow.appendChild(addCell);
+            
+            let deleteCell = createDeleteCell(product);
+            tableRow.appendChild(deleteCell);
+
+            return tableRow;
+        }
+
+        function createNameCell(product) {
+            let nameCell = document.createElement("td");
+            nameCell.textContent = product.name;
+            nameCell.onclick = function() {
+                displayProductDetails(product);
+            };
+            nameCell.style.cursor = "help";
+
+            return nameCell;
+        }
+
+        function displayProductDetails(product) {
+            console.log("displaying " + product.name);
+
+            populateCategoryOptions();
+
+            document.getElementById("product-details").style.display = "inline";
+            document.getElementById("product-id-field").value = product.id;
+            document.getElementById("product-name-field").value = product.name;
+            document.getElementById("product-price-field").value = product.price;
+            document.getElementById("category-options").value = product.category;
+        }
+
+        async function populateCategoryOptions() {
+            let categories = await getCategories();
+
+            let categoryOptions = document.getElementById("category-options");
+
+            for (let category of categories) {
+                let option = document.createElement("option");
+                option.textContent = category;
+
+                categoryOptions.appendChild(option);
+            }
+        }
+
+        function createPriceCell(product) {
+            let priceCell = document.createElement("td");
+            priceCell.textContent = product.price;
+            priceCell.style.cursor = "default";
+
+            return priceCell;
+        }
+
+        function createAddCell(product) {
+            let addCell = document.createElement("td");
+            let addButton = document.createElement("button");
+            addButton.onclick = function(){ addProductToCartAndUpdate(product); };
+            addButton.innerHTML = "add";
+            addCell.appendChild(addButton);
+
+            return addCell;
         }
 
         function addProductToCartAndUpdate(product) {
+            let productId = parseInt(product.id);
             let productName = product.name;
             let price = parseFloat(product.price);
 
             console.log("added " + productName + " to cart");
 
-            if (!(shoppingCart[productName])) {
-                shoppingCart[productName] = [1, price];
+            if (isProductInShoppingCart(product)) {
+                shoppingCart[productId][0]++;           // amount
+                shoppingCart[productId][1] += price;    // total sum
             }
             else {
-                shoppingCart[productName][0]++;
-                shoppingCart[productName][1] += price;
+                shoppingCart[productId] = [1, price, product];
             }
 
-            console.log("new amount: " + shoppingCart[productName][0]);
+            console.log("new amount: " + shoppingCart[productId][0]);
 
             populateCart();
+        }
+
+        function isProductInShoppingCart(product) {
+            let productId = parseInt(product.id);
+
+            return shoppingCart[productId];
+        }
+
+        function populateCart() {
+            let cartTable = document.getElementById("cart-table");
+
+            cartTable.style.visibility = "visible";
+            cartTable.innerHTML = cartHeader();
+
+
+            for (let [productId, [amount, price, product]] of Object.entries(shoppingCart)) {
+                price = amount * product.price;
+
+                console.log(product.name + " " + amount + " " + price);   
+
+                let tableRow = document.createElement("tr");
+
+                let nameCell = document.createElement("td");
+                nameCell.textContent = product.name;
+
+                let amountCell = document.createElement("td");
+                amountCell.textContent = amount;
+
+                let totalCell = document.createElement("td");
+                totalCell.textContent = price;
+
+                let addCell = document.createElement("td");
+                let addButton = document.createElement("button");
+                addButton.textContent = "Add";
+                addButton.onclick = function() { addProductToCartAndUpdate(shoppingCart[productId][2]); };
+                addCell.appendChild(addButton);
+
+                
+                let removeCell = document.createElement("td");
+                let removeButton = document.createElement("button");
+                removeButton.textContent = "Remove";
+                removeButton.onclick = function() { removeFromCart(shoppingCart[productId][2]); };
+                removeCell.appendChild(removeButton);
+
+                tableRow.appendChild(nameCell);
+                tableRow.appendChild(amountCell);
+                tableRow.appendChild(totalCell);
+                tableRow.appendChild(addCell);
+                tableRow.appendChild(removeCell);
+
+                cartTable.appendChild(tableRow);
+            }
+        }
+        
+        function removeFromCart(product) {
+            console.log("remove " + product.name + " from cart");
+
+            if (!isProductInShoppingCart(product)) {
+                console.error("Product is not in cart!");
+                return;
+            }
+
+            shoppingCart[product.id][0]--;                  // amount
+            shoppingCart[product.id][1] -= product.price;   // total
+
+
+            if (shoppingCart[product.id][0] == 0) {
+                shoppingCart = Object.fromEntries(
+                    Object.entries(shoppingCart).filter(([key]) => key != product.id)
+                );
+            }
+
+            console.log("new amount: " + shoppingCart[product.id]);
+
+            populateCart();
+        }
+
+        function cartHeader() {
+            return "<tr><th>Product Name</th><th>Amount</th><th>Price</th><th>Add</th><th>Remove</th></tr>";
+        }
+
+        function createDeleteCell(product) {
+            let deleteCell = document.createElement("td");
+            let deleteButton = document.createElement("button");
+            deleteButton.onclick = function(){ deleteProduct(product); };
+            deleteButton.innerHTML = "delete";
+            deleteCell.appendChild(deleteButton);
+
+            return deleteCell;
+        }
+
+        function deleteProduct(product) {
+            console.log("deleting " + product);
+
+            $.ajax({
+                type: "GET",
+                url: "deleteProduct.php",
+                data: {"Id" : product.id},
+                success: function(data, status) {
+                    populateItemPage();
+                }
+            });
         }
 
         function previousPage() {
             if (page > 1) {
                 page = page - 1;
 
-                populateCategory();
+                populateItemPage();
             }
         }
 
@@ -203,7 +379,7 @@
             if (page < totalPages) {
                 page = page + 1;
 
-                populateCategory();
+                populateItemPage();
             }
         }
 
@@ -219,124 +395,14 @@
 
         }
 
-        function populateCart() {
-            let cartTable = document.getElementById("cart-table");
-
-            //console.log("populating cart... ");
-
-            cartTable.style.visibility = "visible";
-            cartTable.innerHTML = "<tr><th>Product Name</th><th>Amount</th><th>Price</th><th>Add</th><th>Remove</th></tr>";
-
-
-            for (let [product, [amount, price]] of Object.entries(shoppingCart)) {
-                console.log(product + " " + amount + " " + price);   
-
-                let tableRow = document.createElement("tr");
-
-                let tableProductName = document.createElement("td");
-                tableProductName.textContent = product;
-
-                let tableProductAmount = document.createElement("td");
-                tableProductAmount.textContent = amount;
-
-                let tableProductPrice = document.createElement("td");
-                tableProductPrice.textContent = price;
-
-                let addProduct = document.createElement("td");
-                let addButton = document.createElement("button");
-                addButton.textContent = "Add";
-                addButton.onclick = function() { addProductToCartAndUpdate({'name':product, 'price':price}); };
-                addProduct.appendChild(addButton);
-
-                
-                let removeProduct = document.createElement("td");
-                let removeButton = document.createElement("button");
-                removeButton.textContent = "Remove";
-                removeButton.onclick = function() { removeFromCart(product); };
-                removeProduct.appendChild(removeButton);
-
-                tableRow.appendChild(tableProductName);
-                tableRow.appendChild(tableProductAmount);
-                tableRow.appendChild(tableProductPrice);
-                tableRow.appendChild(addProduct);
-                tableRow.appendChild(removeProduct);
-
-                cartTable.appendChild(tableRow);
-            }
-        }
-        
-        function removeFromCart(productName) {
-            console.log("remove " + productName + " from cart");
-
-            if (!(shoppingCart[productName])) {
-                console.error("Product is not in cart!");
-                return;
-            }
-
-            shoppingCart[productName][0]--;
-            shoppingCart[productName][1] -= shoppingCart[productName][1];
-
-
-            if (shoppingCart[productName][0] == 0) {
-                shoppingCart = Object.fromEntries(
-                    Object.entries(shoppingCart).filter(([key]) => key != productName)
-                );
-            }
-
-            console.log("new amount: " + shoppingCart[productName]);
-
-            populateCart();
-        }
-
         function navigateToCreate() {
             window.location.href = "create.html";
-        }
-
-        function deleteProduct(product) {
-            console.log("deleting " + product);
-            $.ajax({
-                type: "GET",
-                url: "deleteProduct.php",
-                data: {"Id" : product.id},
-                success: function(data, status) {
-                    populateCategory();
-                }
-            });
         }
 
         function minimize() {
             document.getElementById("product-details").style.display = "none";
             $("#form-message").html("");
             console.log("minimizing");
-        }
-
-        function displayProductDetails(product) {
-            console.log("displaying " + product.name);
-            document.getElementById("product-details").style.display = "inline";
-            document.getElementById("product-id-field").value = product.id;
-            document.getElementById("product-name-field").value = product.name;
-            document.getElementById("product-price-field").value = product.price;
-            populateCategoryOptions();
-            document.getElementById("category-options").value = product.category;
-        }
-
-        function populateCategoryOptions() {
-            $.ajax({
-                type: "GET",
-                url: "getCategories.php",
-                success: function(data, status) {
-                    let categories = data.categories;
-
-                    let categoryOptions = document.getElementById("category-options");
-
-                    for (let category of categories) {
-                        let option = document.createElement("option");
-                        option.textContent = category;
-
-                        categoryOptions.appendChild(option);
-                    }
-                }
-            });
         }
 
     </script>
