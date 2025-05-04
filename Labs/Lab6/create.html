@@ -6,17 +6,43 @@
         <link href="styles.css" rel="stylesheet" >
     </head>
     <body>
-        <form action="createProduct.php" method="post">
+        <form action="createProduct.php" method="post" id="create-product-form">
             Name: <input type="text" name="pname" />
             Price: <input type="text" name="price" />
             Category: <select id="category-options" name="category"></select>
             <input type="submit" />
-        </form>         
+        </form>
+        <div id="form-message"></div>
         <button onclick="navigateBack()">Go back</button>
     </body>
     <script>
         $(document).ready(function() {
             populateCategoryOptions();
+
+            $("#create-product-form").on("submit", function(event) {
+                event.preventDefault();
+
+                let formData = $(this).serialize();
+                let formMessage = $("#form-message");
+
+                $.ajax({
+                    type: "POST",
+                    url: "createProduct.php",
+                    data: formData,
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.success) {
+                            formMessage.html('<p style="color: green;">Product added successfully!</p>');
+                            $("#create-product-form")[0].reset();
+                        } else {
+                            formMessage.html('<p style="color: red;">Error: ' + response.error + '</p>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        formMessage.html('<p style="color: red;">Error submitting form: ' + error + '</p>');
+                    }
+                });
+            });
         });
 
         function populateCategoryOptions() {

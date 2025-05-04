@@ -32,7 +32,7 @@
     }
 
     function getAllProductsByCategory($conn, $category) {
-        $sql = "SELECT p.Name Name
+        $sql = "SELECT p.Id Id, p.Name Name, p.Price Price, g.Name Category
             FROM Product p INNER JOIN Category g ON p.CategoryId = g.Id
             WHERE g.Name = \"" . $category . "\"";
 
@@ -42,7 +42,12 @@
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $products[] = $row['Name'];
+                $products[] = [
+                    "id" => $row["Id"],
+                    "name" => $row["Name"],
+                    "price" => $row["Price"],
+                    "category" => $row["Category"]
+                ];
             }
         }
 

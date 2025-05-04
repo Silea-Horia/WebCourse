@@ -8,6 +8,7 @@
         exit;
     }
 
+    $id = $_POST["id"];
     $name = $_POST["pname"];
     $price = $_POST["price"];
     $category = $_POST["category"]; 
@@ -32,8 +33,8 @@
     }
     $stmt->close();
 
-    $stmt = $conn->prepare("INSERT INTO Product (Name, Price, CategoryId) VALUES (?, ?, ?)");
-    $stmt->bind_param("sii", $name, $price, $categoryId);
+    $stmt = $conn->prepare("UPDATE Product SET Name = ?, Price = ?, CategoryId = ? WHERE Id = ?");
+    $stmt->bind_param("siii", $name, $price, $categoryId, $id);
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);
     } else {
