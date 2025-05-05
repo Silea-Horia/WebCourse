@@ -33,22 +33,30 @@
             <div id="form-message"></div>
             <button onclick="minimize()">Go back</button>
         </div>
+        <div id="delete-confirmation">
+            <p>Are you sure you want to delete this item?</p>
+            <button onclick="deleteProduct(selectedProduct)">Yes</button>
+            <button onclick="cancel()">Cancel</button>
+        </div>
     </body>
     <script>
         let page = 1;
         let currentCategory = "";
         let totalPages = 0;
         let shoppingCart = {};
+        let selectedProduct;
 
         $(document).ready(function() {
             setCategoriesButtons();
             
-            document.getElementById("prev-button").disabled = true;
-            document.getElementById("next-button").disabled = true;
+            $("#prev-button").prop("disabled", true);
+            $("#next-button").prop("disabled", true);
 
-            document.getElementById("cart-table").style.visibility = "collapse";
+            $("#cart-table").css("visibility", "collapse");
+            
+            $("#delete-confirmation").css("display", "none");
 
-            document.getElementById("product-details").style.display = "none";
+            $("#product-details").css("display", "none");
 
             $("#update-product-form").on("submit", function(event) {
                 event.preventDefault();
@@ -347,7 +355,10 @@
         function createDeleteCell(product) {
             let deleteCell = document.createElement("td");
             let deleteButton = document.createElement("button");
-            deleteButton.onclick = function(){ deleteProduct(product); };
+            deleteButton.onclick = function(){ 
+                selectedProduct = product;
+                $("#delete-confirmation").css("display", "inline");
+            };
             deleteButton.innerHTML = "delete";
             deleteCell.appendChild(deleteButton);
 
@@ -365,6 +376,21 @@
                     populateItemPage();
                 }
             });
+            
+            setConfirmationVisibility(false);
+        }
+
+        function setConfirmationVisibility(visible) {
+            let visibility = "none";
+            if (visible) {
+                visibility = "inline";
+            }
+            $("#delete-confirmation").css("display", "none");
+        }
+
+        function cancel() {
+            selectedProduct = null;
+            setConfirmationVisibility(false);
         }
 
         function previousPage() {

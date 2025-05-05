@@ -6,14 +6,16 @@
         <link href="styles.css" rel="stylesheet" >
     </head>
     <body>
-        <form action="createProduct.php" method="post" id="create-product-form">
-            Name: <input type="text" name="pname" />
-            Price: <input type="text" name="price" />
-            Category: <select id="category-options" name="category"></select>
-            <input type="submit" />
-        </form>
-        <div id="form-message"></div>
-        <button onclick="navigateBack()">Go back</button>
+        <div id="create-form-wrapper">
+            <form action="createProduct.php" method="post" id="create-product-form">
+                Name: <input type="text" name="pname" />
+                Price: <input type="text" name="price" />
+                Category: <select id="category-options" name="category"></select>
+                <input type="submit" />
+            </form>
+            <div id="form-message"></div>
+            <button onclick="navigateBack()" style="align-items: center; display: flex;">Go back</button>
+        </div>
     </body>
     <script>
         $(document).ready(function() {
