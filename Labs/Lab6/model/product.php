@@ -3,12 +3,12 @@
 class Product implements JsonSerializable {
 	private $id;
 	private $name;
-	private $categoryId;
+	private $category;
 
-	public function __construct($id, $name, $categoryId) {
+	public function __construct($id, $name, $category) {
 		$this->id = $id;
 		$this->name = $name;
-		$this->categoryId = $categoryId;
+		$this->category = $category;
 	}
 
 	public function getId() {
@@ -17,8 +17,8 @@ class Product implements JsonSerializable {
 	public function getName() {
 		return $this->name;
 	}
-	public function getCategoryId() {
-		return $this->categoryId;
+	public function getCategory() {
+		return $this->category;
 	}
 
 	public function jsonSerialize() {
