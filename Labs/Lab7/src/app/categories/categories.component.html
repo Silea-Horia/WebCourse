@@ -1,7 +1,9 @@
 <div class="category-list">
     <table>
-        <tr *ngFor="let category of categories">
-            <td>{{ category.name }}</td>
-        </tr>
+        <tbody>
+            <tr *ngFor="let category of categories" [class.selected]="category === selectedCategory" (click)="onSelect(category)">
+                <td>{{ category.name }}</td>
+            </tr>
+        </tbody>
     </table>
 </div>

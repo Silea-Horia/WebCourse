@@ -12,6 +12,7 @@ import { Category } from '../model/category';
 })
 export class CategoriesComponent {
     categories: Category[] = [];
+    selectedCategory?: Category;
 
     constructor(private genericService : GenericService) {}
 
@@ -22,5 +23,10 @@ export class CategoriesComponent {
     getCategories(): void {
         this.genericService.fetchCategories()
             .subscribe(categories => this.categories = categories);
+    }
+
+    onSelect(category: Category): void {
+        console.log("selected " + category.name);
+        this.selectedCategory = category;
     }
 }
