@@ -4,6 +4,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { GenericService } from '../generic.service';
 import { Product } from '../model/product';
 import { Category } from '../model/category';
+import { response } from 'express';
 
 @Component({
     selector: 'app-products',
@@ -15,6 +16,8 @@ export class ProductsComponent implements OnInit {
     products : Product[] = [];
     categories: Category[] = [];
     selectedCategory?: Category;
+    currentPage: number = 1;
+    totalPages: number = 1;
 
     constructor(private genericService : GenericService) {}
 
@@ -34,16 +37,30 @@ export class ProductsComponent implements OnInit {
         } else {
             this.selectedCategory = category;
         }
-        this.getProductsByCategory(this.selectedCategory);
+        this.getProductsByCategory(this.currentPage, this.selectedCategory);
     }
 
-    getProductsByCategory(category?: Category): void {
+    getProductsByCategory( page: number, category?: Category): void {
         if (category === undefined) {
             this.products = [];
             return;
         }
-        let page: number = 1;
         this.genericService.fetchProducts(category, page)
-            .subscribe(products => this.products = products);
+            .subscribe(
+                (response) => {
+                    this.products = response.products;
+                    this.totalPages = response.totalPages;
+                }
+            );
+    }
+
+    nextPage(): void {
+        this.currentPage++;
+        this.getProductsByCategory(this.currentPage, this.selectedCategory);
+    }
+
+    prevPage(): void {
+        this.currentPage--;
+        this.getProductsByCategory(this.currentPage, this.selectedCategory);
     }
 }

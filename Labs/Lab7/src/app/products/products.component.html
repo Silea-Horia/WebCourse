@@ -19,6 +19,6 @@
     <div *ngIf="products.length === 0"><span>No products in category!</span></div>
 </div>
 <div class="page-buttons">
-    <button id="prev-button">Previous page</button>
-    <button id="next-button">Next page</button>
+    <button id="prev-button" [disabled]="currentPage == 1" (click)="prevPage()">Previous page</button>
+    <button id="next-button" [disabled]="currentPage == totalPages" (click)="nextPage()">Next page</button>
 </div>
