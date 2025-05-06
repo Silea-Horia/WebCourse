@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 
 import { GenericService } from '../generic.service';
 import { Product } from '../model/product';
@@ -8,7 +8,7 @@ import { response } from 'express';
 
 @Component({
     selector: 'app-products',
-    imports: [NgFor, NgIf],
+    imports: [CommonModule],
     templateUrl: './products.component.html',
     styleUrl: './products.component.css'
 })
@@ -20,6 +20,9 @@ export class ProductsComponent implements OnInit {
     selectedCategory?: Category;
     currentPage: number = 1;
     totalPages: number = 1;
+
+    shoppingCart: {[key: number]: {product: Product, amount: number}} = {};
+    cartTotal: number = 0;
 
     visibleDetails = true;
 
@@ -97,6 +100,12 @@ export class ProductsComponent implements OnInit {
                   this.formMessage = 'Product updated successfully!';
                   if (this.selectedCategory) {
                     this.getProductsByCategory(this.currentPage, this.selectedCategory);
+                    if (this.shoppingCart[product.id]) {
+                        this.shoppingCart[product.id].product.name = newName;
+                        this.shoppingCart[product.id].product.price = parseInt(newPrice);
+                        this.shoppingCart[product.id].product.category = newCategory;
+                        this.computeCartTotal();
+                    }
                   }
                   this.selectedProduct = undefined;
                 } else {
@@ -117,6 +126,10 @@ export class ProductsComponent implements OnInit {
               this.getProductsByCategory(this.currentPage, this.selectedCategory);
             }
             this.selectedProduct = undefined;
+            if (this.shoppingCart[product.id]) {
+                delete this.shoppingCart[product.id];
+                this.computeCartTotal();
+            }
         }
     }
 
@@ -136,5 +149,31 @@ export class ProductsComponent implements OnInit {
 
     resetForm() {
         this.selectedProduct = undefined;
+    }
+
+    addToShoppingCart(product: Product) {
+        if (this.shoppingCart[product.id]) {
+            this.shoppingCart[product.id].amount++;
+        } else {
+            this.shoppingCart[product.id] = {product: product, amount: 1};
+        }
+        this.computeCartTotal();
+    }
+
+    removeFromShoppingCart(product: Product) {
+        if (this.shoppingCart[product.id]) {
+            this.shoppingCart[product.id].amount--;
+            if (this.shoppingCart[product.id].amount == 0) {
+                delete this.shoppingCart[product.id];
+            }
+            this.computeCartTotal();
+        }
+    }
+
+    computeCartTotal() {
+        this.cartTotal = 0;
+        for (let key in this.shoppingCart) {
+            this.cartTotal += this.shoppingCart[key].amount * this.shoppingCart[key].product.price;
+        }
     }
 }

@@ -7,8 +7,7 @@
         http_response_code(200);
         exit;
     }
-
-    echo "lol";
+    
     $conn = new mysqli("localhost", "root", "", "ecommerce");
 
 
