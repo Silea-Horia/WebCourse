@@ -1,9 +1,37 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs';
+import { Product } from './model/product';
+import { Category } from './model/category';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class GenericService {
+    private backendUrl = 'http://localhost/Lab6/';
 
-  constructor() { }
+    httpOptions = {
+        headers: new HttpHeaders({
+            'Content-Type': 'application/json'
+        })
+    };
+
+    constructor(private http: HttpClient) { }
+
+    fetchCategories() : Observable<Category[]> {
+        return this.http.get<{ categories: string[] }>(this.backendUrl + "getCategories.php")
+            .pipe(
+                map(response => response.categories.map((name) => ({ name }))),
+                catchError(this.handleError<Category[]>('fetchCategories', []))
+      );
+    }
+
+    handleError<T>(operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.error(error);
+            return of(result as T);
+        };
+    }
 }
