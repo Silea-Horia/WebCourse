@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../model/product';
 import { NgFor } from '@angular/common';
+
+import { GenericService } from '../generic.service';
+import { Product } from '../model/product';
 
 @Component({
     selector: 'app-products',
@@ -11,9 +13,16 @@ import { NgFor } from '@angular/common';
 export class ProductsComponent implements OnInit {
     products : Product[] = [];
 
-    constructor() {}
+    constructor(private genericService : GenericService) {}
 
     ngOnInit(): void {
-        
+        this.getProducts();
+    }
+
+    getProducts():void {
+        let category: string = 'Tech';
+        let page: number = 1;
+        this.genericService.fetchProducts(category, page)
+            .subscribe(products => this.products = products);
     }
 }

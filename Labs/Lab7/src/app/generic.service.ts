@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs';
@@ -26,6 +26,23 @@ export class GenericService {
                 map(response => response.categories.map((name) => ({ name }))),
                 catchError(this.handleError<Category[]>('fetchCategories', []))
       );
+    }
+
+    fetchProducts(category: string, page: number) : Observable<Product[]> {
+        let params = new HttpParams()
+            .set('Category', category)
+            .set('Page', page.toString());
+
+        return this.http.get<{ products: Product[], totalPages: number }>(this.backendUrl + "getProducts.php", { params })
+        .pipe(
+            map(response => response.products.map(product => ({
+            id: +product.id,
+            name: product.name,
+            price: +product.price,
+            category: product.category
+            }))),
+            catchError(this.handleError<Product[]>('fetchProductsByCategory', []))
+        );
     }
 
     handleError<T>(operation = 'operation', result?: T) {

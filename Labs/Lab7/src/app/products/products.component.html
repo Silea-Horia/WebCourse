@@ -1,8 +1,10 @@
 <div class="product-list">
     <table>
-        <tr *ngFor="let product of products">
-            <td>{{ product.name }}</td>
-            <td>{{ product.price }}</td>
-        </tr>
+        <tbody>
+            <tr *ngFor="let product of products">
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+            </tr>
+        </tbody>
     </table>
 </div>
