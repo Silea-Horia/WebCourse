@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 
 import { GenericService } from '../generic.service';
@@ -22,6 +22,8 @@ export class ProductsComponent implements OnInit {
     totalPages: number = 1;
 
     visibleDetails = true;
+
+    formMessage: string = '';
 
     constructor(private genericService : GenericService) {}
 
@@ -60,6 +62,31 @@ export class ProductsComponent implements OnInit {
 
     selectProduct(product: Product): void {
         this.selectedProduct = product;
+    }
+
+    updateProduct(product: Product | undefined, newName: string, newPrice: string, newCategory: string): void {
+        if (!product) {
+            this.formMessage = 'No product selected.';
+            return;
+          }
+          this.genericService.updateProduct(product, newName, newPrice, newCategory)
+            .subscribe({
+              next: (response) => {
+                if (response.success) {
+                  this.formMessage = 'Product updated successfully!';
+                  if (this.selectedCategory) {
+                    this.getProductsByCategory(this.currentPage, this.selectedCategory);
+                  }
+                  this.selectedProduct = undefined;
+                } else {
+                  this.formMessage = `Update failed: ${response.error || 'Unknown error'}`;
+                }
+              },
+              error: (error) => {
+                this.formMessage = 'Update failed: Request error.';
+                console.error('Error updating product:', error);
+              }
+            });
     }
 
     nextPage(): void {

@@ -22,16 +22,18 @@
     <button id="prev-button" [disabled]="currentPage == 1" (click)="prevPage()">Previous page</button>
     <button id="next-button" [disabled]="currentPage == totalPages" (click)="nextPage()">Next page</button>
 </div>
-<div  *ngIf="visibleDetails == true" id="product-details">
+<div *ngIf="visibleDetails" id="product-details">
     <form id="update-product-form">
-        <input id="product-id-field" type="hidden" name="id"/>
-        Name: <input id="product-name-field" type="text" name="pname" [value]="selectedProduct ? selectedProduct.name : ''"/>
-        Price: <input id="product-price-field" type="text" name="price" [value]="selectedProduct ? selectedProduct.price : ''"/>
-        Category: <select id="category-options" name="category" [value]="selectedProduct ? selectedProduct.category : ''">
-            <option *ngFor="let category of categories">{{ category.name }}</option>
-        </select>
-        <input type="submit" />
-        <!--<button (click)="minimize()">_</button>-->
+        <span>Name:</span>
+            <input id="product-name-field" type="text" #productName [value]="selectedProduct?.name || ''"/>
+        <span>Price:</span>
+            <input id="product-price-field" type="text" #productPrice [value]="selectedProduct?.price || ''"/>
+        <span>Category:</span>
+            <select id="category-options" #productCategory>
+            <option *ngFor="let category of categories" [value]="category.name" [selected]="category.name === selectedProduct?.category">{{ category.name }}</option>
+            </select>
+        <button type="button" (click)="updateProduct(selectedProduct, productName.value, productPrice.value, productCategory.value)">Update</button>
+        <button type="button" (click)="minimize()">Hide</button>
     </form>
-    <div id="form-message"></div>
-</div>
+    <div id="form-message" [class.error]="formMessage.includes('failed')">{{ formMessage }}</div>
+  </div>

@@ -52,6 +52,27 @@ export class GenericService {
             );
     }
 
+    updateProduct(product: Product, newName: string, newPrice: string, newCategory: string): Observable<{ success: boolean, error?: string }> {
+        let body = new HttpParams()
+            .set('id', product.id.toString())
+            .set('pname', newName)
+            .set('price', newPrice)
+            .set('category', newCategory);
+
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded'
+        });
+
+        return this.http.post<{ success: boolean, error?: string }>(this.backendUrl + "updateProduct.php", body.toString(), { headers })
+            .pipe(
+            map(response => {
+                console.log('Update Product Response:', response);
+                return response;
+            }),
+            catchError(this.handleError<{ success: boolean, error?: string }>('updateProduct', { success: false, error: 'Request failed' }))
+            );
+    }
+
     handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.error(error);
