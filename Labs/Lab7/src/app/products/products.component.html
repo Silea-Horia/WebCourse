@@ -33,7 +33,7 @@
             <option *ngFor="let category of categories" [value]="category.name" [selected]="category.name === selectedProduct?.category">{{ category.name }}</option>
             </select>
         <button type="button" (click)="updateProduct(selectedProduct, productName.value, productPrice.value, productCategory.value)">Update</button>
-        <button type="button" (click)="minimize()">Hide</button>
+        <button type="button" (click)="deleteProduct(selectedProduct)">-</button>
     </form>
     <div id="form-message" [class.error]="formMessage.includes('failed')">{{ formMessage }}</div>
   </div>

@@ -73,6 +73,13 @@ export class GenericService {
             );
     }
 
+    deleteProduct(product: Product): Observable<any> {
+        let params = new HttpParams()
+            .set('Id', product.id);
+
+        return this.http.get(this.backendUrl + "deleteProduct.php", { params }).pipe();
+    }
+
     handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.error(error);

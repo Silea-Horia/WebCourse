@@ -89,6 +89,16 @@ export class ProductsComponent implements OnInit {
             });
     }
 
+    deleteProduct(product: Product | undefined): void {
+        if (product) {
+            this.genericService.deleteProduct(product).subscribe();
+            if (this.selectedCategory) {
+              this.getProductsByCategory(this.currentPage, this.selectedCategory);
+            }
+            this.selectedProduct = undefined;
+        }
+    }
+
     nextPage(): void {
         this.currentPage++;
         this.getProductsByCategory(this.currentPage, this.selectedCategory);
