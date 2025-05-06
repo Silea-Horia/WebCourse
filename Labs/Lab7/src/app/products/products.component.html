@@ -16,7 +16,7 @@
             </tr>
         </tbody>
     </table>
-    <div *ngIf="products.length === 0"><span>No products in category!</span></div>
+    <div *ngIf="products.length === 0 && selectedCategory != undefined"><span>No products in category!</span></div>
 </div>
 <div class="page-buttons">
     <button id="prev-button" [disabled]="currentPage == 1" (click)="prevPage()">Previous page</button>
