@@ -43,6 +43,7 @@ export class ProductsComponent implements OnInit {
         } else {
             this.selectedCategory = category;
         }
+        this.currentPage = 1;
         this.getProductsByCategory(this.currentPage, this.selectedCategory);
     }
 
@@ -62,6 +63,26 @@ export class ProductsComponent implements OnInit {
 
     selectProduct(product: Product): void {
         this.selectedProduct = product;
+    }
+
+    createProduct(name: string, price: string, category: string) {
+        this.genericService.createProduct(name, price, category).subscribe({
+            next: (response) => {
+                if (response.success) {
+                  this.formMessage = 'Product created successfully!';
+                  if (this.selectedCategory) {
+                    this.getProductsByCategory(this.currentPage, this.selectedCategory);
+                  }
+                  this.selectedProduct = undefined;
+                } else {
+                  this.formMessage = `Create failed: ${response.error || 'Unknown error'}`;
+                }
+              },
+              error: (error) => {
+                this.formMessage = 'Create failed: Request error.';
+                console.error('Error creating product:', error);
+              }
+        });
     }
 
     updateProduct(product: Product | undefined, newName: string, newPrice: string, newCategory: string): void {
@@ -111,5 +132,9 @@ export class ProductsComponent implements OnInit {
 
     minimize(): void {
         this.visibleDetails = false;
+    }
+
+    resetForm() {
+        this.selectedProduct = undefined;
     }
 }

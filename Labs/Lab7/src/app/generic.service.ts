@@ -52,6 +52,26 @@ export class GenericService {
             );
     }
 
+    createProduct(name: string, price: string, category: string) {
+        let body = new HttpParams()
+            .set('pname', name)
+            .set('price', price)
+            .set('category', category);
+
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded'
+        });
+
+        return this.http.post<{ success: boolean, error?: string }>(this.backendUrl + "createProduct.php", body.toString(), { headers })
+            .pipe(
+            map(response => {
+                console.log('Create Product Response:', response);
+                return response;
+            }),
+            catchError(this.handleError<{ success: boolean, error?: string }>('createProduct', { success: false, error: 'Request failed' }))
+            );
+    }
+
     updateProduct(product: Product, newName: string, newPrice: string, newCategory: string): Observable<{ success: boolean, error?: string }> {
         let body = new HttpParams()
             .set('id', product.id.toString())
