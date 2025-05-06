@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 import { GenericService } from '../generic.service';
 import { Product } from '../model/product';
@@ -7,7 +7,7 @@ import { Category } from '../model/category';
 
 @Component({
     selector: 'app-products',
-    imports: [NgFor],
+    imports: [NgFor, NgIf],
     templateUrl: './products.component.html',
     styleUrl: './products.component.css'
 })
@@ -29,12 +29,21 @@ export class ProductsComponent implements OnInit {
 
     onSelect(category: Category): void {
         console.log("selected " + category.name);
-        this.selectedCategory = category;
+        if (this.selectedCategory == category) {
+            this.selectedCategory = undefined;
+        } else {
+            this.selectedCategory = category;
+        }
+        this.getProductsByCategory(this.selectedCategory);
     }
 
-    getProductsByCategory(categoryName: string):void {
+    getProductsByCategory(category?: Category): void {
+        if (category === undefined) {
+            this.products = [];
+            return;
+        }
         let page: number = 1;
-        this.genericService.fetchProducts(categoryName, page)
+        this.genericService.fetchProducts(category, page)
             .subscribe(products => this.products = products);
     }
 }

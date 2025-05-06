@@ -28,9 +28,9 @@ export class GenericService {
       );
     }
 
-    fetchProducts(categoryName: string, page: number) : Observable<Product[]> {
+    fetchProducts(category: Category, page: number) : Observable<Product[]> {
         let params = new HttpParams()
-            .set('Category', categoryName)
+            .set('Category', category.name)
             .set('Page', page.toString());
 
         return this.http.get<{ products: Product[], totalPages: number }>(this.backendUrl + "getProducts.php", { params })
