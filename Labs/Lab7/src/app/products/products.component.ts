@@ -14,10 +14,14 @@ import { response } from 'express';
 })
 export class ProductsComponent implements OnInit {
     products : Product[] = [];
+    selectedProduct?: Product = undefined;
+
     categories: Category[] = [];
     selectedCategory?: Category;
     currentPage: number = 1;
     totalPages: number = 1;
+
+    visibleDetails = true;
 
     constructor(private genericService : GenericService) {}
 
@@ -54,6 +58,10 @@ export class ProductsComponent implements OnInit {
             );
     }
 
+    selectProduct(product: Product): void {
+        this.selectedProduct = product;
+    }
+
     nextPage(): void {
         this.currentPage++;
         this.getProductsByCategory(this.currentPage, this.selectedCategory);
@@ -62,5 +70,9 @@ export class ProductsComponent implements OnInit {
     prevPage(): void {
         this.currentPage--;
         this.getProductsByCategory(this.currentPage, this.selectedCategory);
+    }
+
+    minimize(): void {
+        this.visibleDetails = false;
     }
 }

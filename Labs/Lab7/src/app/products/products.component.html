@@ -11,7 +11,7 @@
     <table>
         <tbody>
             <tr *ngFor="let product of products">
-                <td>{{ product.name }}</td>
+                <td (click)="selectProduct(product)">{{ product.name }}</td>
                 <td>{{ product.price }}</td>
             </tr>
         </tbody>
@@ -21,4 +21,17 @@
 <div class="page-buttons">
     <button id="prev-button" [disabled]="currentPage == 1" (click)="prevPage()">Previous page</button>
     <button id="next-button" [disabled]="currentPage == totalPages" (click)="nextPage()">Next page</button>
+</div>
+<div  *ngIf="visibleDetails == true" id="product-details">
+    <form id="update-product-form">
+        <input id="product-id-field" type="hidden" name="id"/>
+        Name: <input id="product-name-field" type="text" name="pname" [value]="selectedProduct ? selectedProduct.name : ''"/>
+        Price: <input id="product-price-field" type="text" name="price" [value]="selectedProduct ? selectedProduct.price : ''"/>
+        Category: <select id="category-options" name="category" [value]="selectedProduct ? selectedProduct.category : ''">
+            <option *ngFor="let category of categories">{{ category.name }}</option>
+        </select>
+        <input type="submit" />
+        <!--<button (click)="minimize()">_</button>-->
+    </form>
+    <div id="form-message"></div>
 </div>
