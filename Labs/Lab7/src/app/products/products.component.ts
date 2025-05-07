@@ -69,6 +69,7 @@ export class ProductsComponent implements OnInit {
     }
 
     createProduct(name: string, price: string, category: string) {
+        console.log("creating " + name);
         this.genericService.createProduct(name, price, category).subscribe({
             next: (response) => {
                 if (response.success) {
@@ -149,6 +150,7 @@ export class ProductsComponent implements OnInit {
 
     resetForm() {
         this.selectedProduct = undefined;
+        this.formMessage = '';
     }
 
     addToShoppingCart(product: Product) {
@@ -161,13 +163,17 @@ export class ProductsComponent implements OnInit {
     }
 
     removeFromShoppingCart(product: Product) {
-        if (this.shoppingCart[product.id]) {
+        if (this.isProductInShoppingCart(product)) {
             this.shoppingCart[product.id].amount--;
             if (this.shoppingCart[product.id].amount == 0) {
                 delete this.shoppingCart[product.id];
             }
             this.computeCartTotal();
         }
+    }
+
+    isProductInShoppingCart(product: Product): boolean {
+        return this.shoppingCart[product.id] != undefined;
     }
 
     computeCartTotal() {

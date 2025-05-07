@@ -14,7 +14,8 @@
                 <td (click)="selectProduct(product)">{{ product.name }}</td>
                 <td>{{ product.price }}</td>
                 <td><button (click)="addToShoppingCart(product)">+</button></td>
-                <td><button (click)="removeFromShoppingCart(product)">-</button></td>
+                <td><button *ngIf="isProductInShoppingCart(product)" (click)="removeFromShoppingCart(product)">-</button></td>
+                <td><button (click)="deleteProduct(product)">x</button></td>
             </tr>
         </tbody>
     </table>
@@ -35,9 +36,9 @@
         <option *ngFor="let category of categories" [value]="category.name" [selected]="category.name === selectedProduct?.category">{{ category.name }}</option>
         </select>
         <button *ngIf="selectedProduct != undefined" type="button" (click)="updateProduct(selectedProduct, productName.value, productPrice.value, productCategory.value)">Update</button>
-        <button *ngIf="selectedProduct != undefined" type="button" (click)="deleteProduct(selectedProduct)">-</button>
-        <button type="button" (click)="resetForm()">Reset</button>
-        <button *ngIf="selectedProduct == undefined" id="create-product-button" (click)="createProduct(productName.value, productPrice.value, productCategory.value)">Create</button>
+        <button *ngIf="selectedProduct != undefined" type="button" (click)="deleteProduct(selectedProduct)">x</button>
+        <button type="button" (click)="resetForm()">O</button>
+        <button *ngIf="selectedProduct == undefined" type="button" id="create-product-button" (click)="createProduct(productName.value, productPrice.value, productCategory.value)">+</button>
     </form>
     <div id="form-message" [class.error]="formMessage.includes('failed')">{{ formMessage }}</div>
 </div>
@@ -49,7 +50,7 @@
                 <td>{{ item.value.product.price * item.value.amount }}</td>
             </tr>
             <tr>
-                <td>Total: {{cartTotal}}</td>
+                <td>Cart Total: {{ cartTotal }}</td>
             </tr>
         </tbody>
     </table>
