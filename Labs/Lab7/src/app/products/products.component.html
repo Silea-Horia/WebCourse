@@ -16,7 +16,7 @@
                     <td>{{ product.price }}</td>
                     <td><button (click)="addToShoppingCart(product)">+</button></td>
                     <td><button *ngIf="isProductInShoppingCart(product)" (click)="removeFromShoppingCart(product)">-</button></td>
-                    <td><button (click)="deleteProduct(product)">x</button></td>
+                    <td><button (click)="selectProduct(product); askDelete()">x</button></td>
                 </tr>
             </tbody>
         </table>
@@ -37,7 +37,7 @@
             <option *ngFor="let category of categories" [value]="category.name" [selected]="category.name === selectedProduct?.category">{{ category.name }}</option>
             </select>
             <button *ngIf="selectedProduct != undefined" type="button" (click)="updateProduct(selectedProduct, productName.value, productPrice.value, productCategory.value)">Update</button>
-            <button *ngIf="selectedProduct != undefined" type="button" (click)="deleteProduct(selectedProduct)">x</button>
+            <button *ngIf="selectedProduct != undefined" type="button" (click)="selectProduct(selectedProduct); askDelete()">x</button>
             <button type="button" (click)="resetForm()">O</button>
             <button *ngIf="selectedProduct == undefined" type="button" id="create-product-button" (click)="createProduct(productName.value, productPrice.value, productCategory.value)">+</button>
         </form>
@@ -57,4 +57,9 @@
             </tbody>
         </table>
     </div>
+</div>
+<div id="confirmation-message" *ngIf="confirmation">
+    Delete product?
+    <button (click)="deleteProduct(selectedProduct)">y</button>
+    <button (click)="cancelDelete()">n</button>
 </div>

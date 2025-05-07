@@ -28,6 +28,8 @@ export class ProductsComponent implements OnInit {
 
     formMessage: string = '';
 
+    confirmation: boolean = false;
+
     constructor(private genericService : GenericService) {}
 
     ngOnInit(): void {
@@ -120,7 +122,16 @@ export class ProductsComponent implements OnInit {
             });
     }
 
+    askDelete() {
+        this.confirmation = true;
+    }
+
+    cancelDelete() {
+        this.confirmation = false;
+    }
+
     deleteProduct(product: Product | undefined): void {
+        this.confirmation = false;
         if (product) {
             this.genericService.deleteProduct(product).subscribe();
             if (this.selectedCategory) {
