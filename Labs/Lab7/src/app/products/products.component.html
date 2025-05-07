@@ -1,57 +1,60 @@
-<div class="category-list">
-    <table>
-        <tbody>
-            <tr *ngFor="let category of categories" [class.selected]="category === selectedCategory" (click)="onSelect(category)">
-                <td>{{ category.name }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="product-list">
-    <table>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td (click)="selectProduct(product)">{{ product.name }}</td>
-                <td>{{ product.price }}</td>
-                <td><button (click)="addToShoppingCart(product)">+</button></td>
-                <td><button *ngIf="isProductInShoppingCart(product)" (click)="removeFromShoppingCart(product)">-</button></td>
-                <td><button (click)="deleteProduct(product)">x</button></td>
-            </tr>
-        </tbody>
-    </table>
-    <div *ngIf="products.length === 0 && selectedCategory != undefined"><span>No products in category!</span></div>
-</div>
-<div class="page-buttons">
-    <button id="prev-button" [disabled]="currentPage == 1" (click)="prevPage()">Previous page</button>
-    <button id="next-button" [disabled]="currentPage == totalPages" (click)="nextPage()">Next page</button>
-</div>
-<div *ngIf="visibleDetails" id="product-details">
-    <form id="update-product-form">
-        <span>Name:</span>
-            <input id="product-name-field" type="text" #productName [value]="selectedProduct?.name || ''"/>
-        <span>Price:</span>
-            <input id="product-price-field" type="text" #productPrice [value]="selectedProduct?.price || ''"/>
-        <span>Category:</span>
-        <select id="category-options" #productCategory>
-        <option *ngFor="let category of categories" [value]="category.name" [selected]="category.name === selectedProduct?.category">{{ category.name }}</option>
-        </select>
-        <button *ngIf="selectedProduct != undefined" type="button" (click)="updateProduct(selectedProduct, productName.value, productPrice.value, productCategory.value)">Update</button>
-        <button *ngIf="selectedProduct != undefined" type="button" (click)="deleteProduct(selectedProduct)">x</button>
-        <button type="button" (click)="resetForm()">O</button>
-        <button *ngIf="selectedProduct == undefined" type="button" id="create-product-button" (click)="createProduct(productName.value, productPrice.value, productCategory.value)">+</button>
-    </form>
-    <div id="form-message" [class.error]="formMessage.includes('failed')">{{ formMessage }}</div>
-</div>
-<div id="shopping-cart">
-    <table>
-        <tbody>
-            <tr *ngFor="let item of shoppingCart | keyvalue">
-                <td>{{ item.value.amount }}x {{ item.value.product.name }}</td>
-                <td>{{ item.value.product.price * item.value.amount }}</td>
-            </tr>
-            <tr>
-                <td>Cart Total: {{ cartTotal }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="wrapper">
+    <div class="category-list">
+        <table>
+            <tbody>
+                <tr *ngFor="let category of categories" [class.selected]="category === selectedCategory" (click)="onSelect(category)">
+                    <td>{{ category.name }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="product-list">
+        <table>
+            <tbody>
+                <tr *ngFor="let product of products">
+                    <td (click)="selectProduct(product)">{{ product.name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td><button (click)="addToShoppingCart(product)">+</button></td>
+                    <td><button *ngIf="isProductInShoppingCart(product)" (click)="removeFromShoppingCart(product)">-</button></td>
+                    <td><button (click)="deleteProduct(product)">x</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <div *ngIf="products.length === 0 && selectedCategory != undefined"><span>No products in category!</span></div>
+        <div class="page-buttons">
+            <button id="prev-button" [disabled]="currentPage == 1" (click)="prevPage()">&lt;</button>
+            <button id="next-button" [disabled]="currentPage == totalPages" (click)="nextPage()">&gt;</button>
+        </div>
+    </div>
+    <div *ngIf="visibleDetails" id="product-details">
+        <form id="update-product-form">
+            <span>Name:</span>
+                <input id="product-name-field" type="text" #productName [value]="selectedProduct?.name || ''"/>
+            <span>Price:</span>
+                <input id="product-price-field" type="text" #productPrice [value]="selectedProduct?.price || ''"/>
+            <span>Category:</span>
+            <select id="category-options" #productCategory>
+            <option *ngFor="let category of categories" [value]="category.name" [selected]="category.name === selectedProduct?.category">{{ category.name }}</option>
+            </select>
+            <button *ngIf="selectedProduct != undefined" type="button" (click)="updateProduct(selectedProduct, productName.value, productPrice.value, productCategory.value)">Update</button>
+            <button *ngIf="selectedProduct != undefined" type="button" (click)="deleteProduct(selectedProduct)">x</button>
+            <button type="button" (click)="resetForm()">O</button>
+            <button *ngIf="selectedProduct == undefined" type="button" id="create-product-button" (click)="createProduct(productName.value, productPrice.value, productCategory.value)">+</button>
+        </form>
+        <div id="form-message" [class.error]="formMessage.includes('failed')">{{ formMessage }}</div>
+    </div>
+    <div id="shopping-cart">
+        <table>
+            <tbody>
+                <tr *ngFor="let item of shoppingCart | keyvalue">
+                    <td>{{ item.value.amount }}x {{ item.value.product.name }}</td>
+                    <td>{{ item.value.product.price * item.value.amount }}</td>
+                    <td><button (click)="removeFromShoppingCart(item.value.product)">-</button></td>
+                </tr>
+                <tr>
+                    <td>Cart Total: {{ cartTotal }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

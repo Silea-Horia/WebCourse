@@ -1,3 +1,88 @@
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    padding-top: 20px;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.category-list {
+    font-size: 20px;
+    min-width: 100px;
+    cursor: pointer;
+}
+
+.category-list td,
+.product-list td,
+#shopping-cart td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    min-width: 20px;
+}
+
 .selected {
     background-color: lightgray;
+}
+
+.product-list {
+    min-width: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+
+.product-list table,
+#shopping-cart table {
+    border-collapse: collapse;
+}
+
+#product-details {
+    display: flex;
+    flex-direction: column;
+}
+
+#product-details form {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px;
+}
+
+#shopping-cart {
+    min-width: 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+#shopping-cart table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#shopping-cart td {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+#form-message {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+#form-message.error {
+    color: red;
+    font-weight: bold;
+}
+
+.category-list tr:hover {
+    background-color: #f0f0f0;
+}
+.product-list tr:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+.product-list button:hover,
+.product-details button:hover {
+    background-color: #ddd;
 }
