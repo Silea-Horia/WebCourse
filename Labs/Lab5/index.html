@@ -21,7 +21,6 @@
 
     $(document).on('mouseup', function() {
         isDragging = false;
-
     });
 
     $(document).on('mousemove', function(e) {
@@ -33,7 +32,7 @@
         if (isDragging) {
             const distance = Math.sqrt(Math.abs(initialX - e.pageX) ** 2 + Math.abs(initialY - e.pageY) ** 2);
 
-            $('body').css('background', 'radial-gradient(circle at ' + x + '% ' + y + '%, yellow ' + distance / 2 + '%, green)');
+            $('body').css('background', 'radial-gradient(circle at ' + initialX + 'px ' + initialY + 'px, yellow ' + distance / 8 + '%, green)');
         }
     });
 </script>
