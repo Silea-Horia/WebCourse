@@ -24,17 +24,11 @@ public class LoginController extends HttpServlet {
         String result = authenticator.authenticate(username, password);
 
         if (result.equals("success")) {
-            rd = request.getRequestDispatcher("/index.jsp");
+            rd = request.getRequestDispatcher("/game");
             User user = new User(username, password);
-            request.setAttribute("user", user);
+//            request.setAttribute("user", user);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-
-            // HttpSession session = request.getSession();
-            // String user = session.getAttribute("user");
-            // if (user==null || user.equals("")) {
-            //        return;
-            // }
         } else {
             rd = request.getRequestDispatcher("/error.jsp");
         }
