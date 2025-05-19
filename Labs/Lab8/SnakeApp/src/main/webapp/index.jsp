@@ -5,9 +5,10 @@
     <title>JSP - Hello World</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
-<br/>
-<a href="hello-servlet">Hello Servlet</a>
+<form action="login-controller" method="post">
+    Enter username : <input type="text" name="username"> <BR>
+    Enter password : <input type="password" name="password"> <BR>
+    <input type="submit" value="Login"/>
+</form>
 </body>
 </html>
