@@ -40,9 +40,31 @@
             %>
         </tbody>
     </table>
-    <button>^</button>
-    <button><</button>
-    <button>></button>
-    <button>v</button>
+    <form action="${pageContext.request.contextPath}/game" method="get">
+        <%
+            String direction = (String) request.getAttribute("direction");
+            String upDisable = "";
+            String downDisable = "";
+            String leftDisable = "";
+            String rightDisable = "";
+            if(Objects.equals(direction, "up")) {
+                downDisable = "disabled";
+            }
+            if(Objects.equals(direction, "down")) {
+                upDisable = "disabled";
+            }
+            if(Objects.equals(direction, "left")) {
+                rightDisable = "disabled";
+            }
+            if(Objects.equals(direction, "right")) {
+                leftDisable = "disabled";
+            }
+
+        %>
+        <input type="submit" name="up" value="^" <%=upDisable%>/>
+        <input type="submit" name="down" value="v" <%=downDisable%>/>
+        <input type="submit" name="left" value="<" <%=leftDisable%>/>
+        <input type="submit" name="right" value=">" <%=rightDisable%>/>
+    </form>
 </body>
 </html>
