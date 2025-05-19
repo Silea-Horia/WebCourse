@@ -19,9 +19,9 @@ public class Authentificator {
         }
     }
 
-    public String authenticate(String username, String password) {
+    public int authenticate(String username, String password) {
         ResultSet rs;
-        String result = "error";
+        int result = 0;
         System.out.println(username+" "+password);
         try {
             rs = stmt.executeQuery(
@@ -30,7 +30,7 @@ public class Authentificator {
                     "where username='" + username + "' and password='" + password + "'");
 
             if (rs.next()) {
-                result = "success";
+                result = rs.getInt("id");
             }
 
             rs.close();

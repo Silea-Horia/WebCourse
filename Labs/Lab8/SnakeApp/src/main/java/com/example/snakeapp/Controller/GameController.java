@@ -18,11 +18,11 @@ import java.util.Arrays;
 public class GameController extends HttpServlet {
     private Cell[][] board;
     private Statement stmt;
+    private User user;
 
     public void init() {
         this.createBoard();
         this.connect();
-        this.getSnake();
     }
 
     private void createBoard() {
@@ -45,16 +45,19 @@ public class GameController extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-         if (user == null) {
-                RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
-                rd.forward(request, response);
-         }
-        String message = "Hello World";
-        request.setAttribute("message", message);
+        this.verifyUser(request, response);
+        this.getSnake();
         request.setAttribute("board", board);
         request.getRequestDispatcher("/game.jsp").forward(request, response);
+    }
+
+    private void verifyUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        this.user = (User) session.getAttribute("user");
+        if (user == null) {
+            RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+            rd.forward(request, response);
+        }
     }
 
     private void getSnake() {
@@ -62,7 +65,8 @@ public class GameController extends HttpServlet {
         try {
             rs = stmt.executeQuery(
                     "select * " +
-                            "from snake ");
+                            "from snake " +
+                        "where userId = " + this.user.getId());
 
             while (rs.next()) {
                 Cell snakeCell = new Cell(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4));

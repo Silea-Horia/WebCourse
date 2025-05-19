@@ -1,5 +1,6 @@
 <%@ page import="com.example.snakeapp.model.Cell" %>
-<%@ page import="java.util.Objects" %><%--
+<%@ page import="java.util.Objects" %>
+<%@ page import="com.example.snakeapp.model.User" %><%--
   Created by IntelliJ IDEA.
   User: horia
   Date: 19.05.2025
@@ -13,12 +14,11 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <p>Message: <%=request.getAttribute("message")%></p>
+    <p>User: <%=((User)session.getAttribute("user")).getUsername()%></p>
     <table>
         <tbody>
             <%
                 Cell[][] board = (Cell[][]) request.getAttribute("board");
-
 
                 for (Cell[] row : board) {
                     %><tr><%

@@ -21,11 +21,11 @@ public class LoginController extends HttpServlet {
         RequestDispatcher rd;
 
         Authentificator authenticator = new Authentificator();
-        String result = authenticator.authenticate(username, password);
+        int result = authenticator.authenticate(username, password);
 
-        if (result.equals("success")) {
+        if (result != 0) {
             rd = request.getRequestDispatcher("/game");
-            User user = new User(username, password);
+            User user = new User(result, username, password);
 //            request.setAttribute("user", user);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
