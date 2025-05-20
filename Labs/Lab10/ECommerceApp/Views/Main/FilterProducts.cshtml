@@ -1,0 +1,179 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FilterProducts</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    
+</head>
+<body>
+    <div id="category-buttons"></div>
+    <br />
+    Product list:
+    <div id="product-list"></div>
+    <br />
+    <button id="prev-button" onclick="prevPage()">Prev</button>
+    <button id="next-button" onclick="nextPage()">Next</button>
+    <br />
+    <div id="cart-container"></div>
+    <br />
+    <input type="text" id="product-name" />
+    <input type="text" id="product-price" />
+    <button id="create-button" onclick="createProduct()">Create</button>
+    <select id="category-options" name="category"></select>
+</body>
+<script>
+    var currentPage = 1;
+    var currentCategory = '';
+    var totalPages = 0;
+
+    $(document).ready(function(){
+        $.get("/Main/GetCategories",
+            function(data, status) {
+                $("#category-buttons").html(data);
+            }
+        );
+
+        $("#prev-button").prop("disabled", true);
+        $("#next-button").prop("disabled", true);
+
+        populateCategoryOptions();
+    });
+
+    async function getCategories() {
+        let categories;
+
+        await $.get("/Main/GetRawCategories",
+            function(data, status) {
+                categories = data;
+            }
+        );
+
+        return categories;
+    }
+
+    async function populateCategoryOptions() {
+        let categories = await getCategories();
+
+        let categoryOptions = document.getElementById("category-options");
+
+        for (let category of categories) {
+            let option = document.createElement("option");
+            option.textContent = category;
+
+            categoryOptions.appendChild(option);
+        }
+    }
+
+    function setTotalPages() {
+        $.get("/Main/GetTotalPages", { categoryId : currentCategory },
+            function(data, status) {
+                totalPages = data;
+            }
+        );
+    }
+
+    function setCategory(category) {
+        currentCategory = category;
+        currentPage = 1;
+
+        populateCategory();
+        setTotalPages();
+
+        disableButtons();
+    }
+
+    function populateCategory() {
+        setTotalPages();
+
+        $.get("/Main/GetProductsFromCategory", { categoryId : currentCategory, page : currentPage },
+            function(data, status) {
+                $("#product-list").html(data);
+            }
+        );
+    }
+
+    function nextPage() {
+        currentPage += 1;
+
+        if (currentCategory != '') {
+            populateCategory();
+        }
+
+        disableButtons();
+    }
+
+    function prevPage() {
+        currentPage -= 1;
+
+        if (currentCategory != '') {
+            populateCategory();
+        }
+
+        disableButtons();
+    }
+
+    function disableButtons() {
+        $("#next-button").prop("disabled", currentPage == totalPages);
+        $("#prev-button").prop("disabled", currentPage == 1);
+    }
+
+    function addToCart(productId) {
+        $.get("/Main/AddToCart", { productId : productId },
+            function(data, status) {
+                $.get("/Main/GetCart",
+                    function(data, status) {
+                        $("#cart-container").html(data);
+                    }
+                );
+            }
+        );
+    }
+
+    function removeFromCart(productId) {
+        $.get("/Main/RemoveFromCart", { productId : productId },
+            function(data, status) {
+                $.get("/Main/GetCart",
+                    function(data, status) {
+                        $("#cart-container").html(data);
+                    }
+                );
+            }
+        );
+    }
+
+    function createProduct() {
+        let productName = $("#product-name").val();
+        let price = $("#product-price").val();
+        let categoryName = $("#category-options").val();
+
+        $.get("/Main/CreateProduct", { productName : productName, price : price, categoryName : categoryName},
+            function(data, status) {
+                if (currentCategory != '') {
+                    currentPage = 1;
+                    populateCategory();
+                    disableButtons();
+                }
+            }
+        )
+    }
+
+    function deleteProduct(productId) {
+        $.get("/Main/deleteProduct", { productId : productId},
+            function(data, status) {
+                if (currentCategory != '') {
+                    currentPage = 1;
+                    populateCategory();
+                    disableButtons();
+                }
+            }
+        );
+        removeFromCart(productId);
+    }
+</script>
+</html>
