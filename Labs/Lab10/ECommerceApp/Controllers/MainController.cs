@@ -132,7 +132,7 @@
         public void DeleteProduct(int productId)
         {
             DAL dal = new();
-            dal.deleteProduct(productId);
+            dal.DeleteProduct(productId);
             if (shoppingCart.ContainsKey(productId))
             {
                 shoppingCart.Remove(productId);
@@ -156,6 +156,12 @@
         {
             DAL dal = new();
             return dal.GetCategoryName(dal.GetProduct(productId).CategoryId);
+        }
+
+        public void UpdateProduct(int productId, string productName, int price, string categoryName)
+        {
+            DAL dal = new();
+            dal.UpdateProduct(productId, productName, price, categoryName);
         }
     }
 }

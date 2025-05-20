@@ -195,12 +195,29 @@ namespace ECommerceApp.DataAbstractionLayer
             return categoryName;
         }
 
-        public void deleteProduct(int productId)
+        public void DeleteProduct(int productId)
         {
             MySqlCommand cmd = new();
             cmd.Connection = this.conn;
             cmd.CommandText = "delete from product where id = " + productId;
             cmd.ExecuteNonQuery();
+        }
+
+        public void UpdateProduct(int productId, string productName, int price, string categoryName)
+        {
+            int categoryId = this.GetCategoryId(categoryName);
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = this.conn;
+                cmd.CommandText = "update product set name='" + productName + "', price=" + price + ", categoryId=" + categoryId + " where id = " + productId;
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Console.Write(ex.Message);
+            }
         }
     }
 }

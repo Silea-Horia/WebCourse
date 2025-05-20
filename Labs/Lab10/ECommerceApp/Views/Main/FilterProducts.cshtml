@@ -164,7 +164,7 @@
                     disableButtons();
                 }
             }
-        )
+        );
     }
 
     function deleteProduct(productId) {
@@ -210,6 +210,24 @@
         $("#update-button").prop("disabled", true);
         $("#product-name").val("");
         $("#product-price").val("");
+    }
+
+    function update() {
+        if (currentProduct) {
+            let productName = $("#product-name").val();
+            let price = $("#product-price").val();
+            let categoryName = $("#category-options").val();
+
+            $.get("/Main/UpdateProduct", { productId : currentProduct, productName : productName, price : price, categoryName : categoryName},
+                function(data, status) {
+                    if (currentCategory != '') {
+                        currentPage = 1;
+                        populateCategory();
+                        disableButtons();
+                    }
+                }
+            );
+        }
     }
 </script>
 </html>
