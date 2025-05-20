@@ -24,13 +24,16 @@
     <br />
     <input type="text" id="product-name" />
     <input type="text" id="product-price" />
-    <button id="create-button" onclick="createProduct()">Create</button>
     <select id="category-options" name="category"></select>
+    <button id="create-button" onclick="createProduct()">Create</button>
+    <button id="cancel-button" onclick="cancel()">Cancel</button>
+    <button id="update-button" onclick="update()">Update</button>
 </body>
 <script>
     var currentPage = 1;
     var currentCategory = '';
     var totalPages = 0;
+    var currentProduct = undefined;
 
     $(document).ready(function(){
         $.get("/Main/GetCategories",
@@ -41,6 +44,7 @@
 
         $("#prev-button").prop("disabled", true);
         $("#next-button").prop("disabled", true);
+        $("#update-button").prop("disabled", true);
 
         populateCategoryOptions();
     });
@@ -174,6 +178,38 @@
             }
         );
         removeFromCart(productId);
+    }
+
+    async function selectProduct(productId) {
+        currentProduct = productId;
+        $("#create-button").prop("disabled", true);
+        $("#update-button").prop("disabled", false);
+
+        $.get("/Main/GetProductName", { productId : productId },
+            function(data, status) {
+                $("#product-name").val(data);
+            }
+        );
+
+        $.get("/Main/GetProductPrice", { productId : productId },
+            function(data, status) {
+                $("#product-price").val(data);
+            }
+        );
+
+        $.get("/Main/GetProductCategory", { productId : productId },
+            function(data, status) {
+                $("#category-options").val(data);
+            }
+        );
+    }
+
+    function cancel() {
+        currentProduct = undefined;
+        $("#create-button").prop("disabled", false);
+        $("#update-button").prop("disabled", true);
+        $("#product-name").val("");
+        $("#product-price").val("");
     }
 </script>
 </html>

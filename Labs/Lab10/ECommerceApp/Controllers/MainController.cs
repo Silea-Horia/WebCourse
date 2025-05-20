@@ -54,7 +54,7 @@
 
             foreach (Product product in products)
             {
-                result += "<tr><td>" + product.Name + "</td><td>" + product.Price + "</td><td><button onclick=\"addToCart(" + product.Id + ")\">+</button><button onclick=\"deleteProduct(" + product.Id + ")\">del</button></td></tr>";
+                result += "<tr><td onclick=\"selectProduct(" + product.Id + ")\">" + product.Name + "</td><td>" + product.Price + "</td><td><button onclick=\"addToCart(" + product.Id + ")\">+</button><button onclick=\"deleteProduct(" + product.Id + ")\">del</button></td></tr>";
             }
 
             result += "</table>";
@@ -137,6 +137,25 @@
             {
                 shoppingCart.Remove(productId);
             }
+        }
+
+        public String GetProductName(int productId)
+        {
+            DAL dal = new();
+            return dal.GetProduct(productId).Name;
+        }
+
+
+        public int GetProductPrice(int productId)
+        {
+            DAL dal = new();
+            return dal.GetProduct(productId).Price;
+        }
+
+        public string GetProductCategory(int productId)
+        {
+            DAL dal = new();
+            return dal.GetCategoryName(dal.GetProduct(productId).CategoryId);
         }
     }
 }

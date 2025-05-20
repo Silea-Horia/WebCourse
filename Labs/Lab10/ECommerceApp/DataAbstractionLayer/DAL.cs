@@ -170,6 +170,31 @@ namespace ECommerceApp.DataAbstractionLayer
             return categoryId;
         }
 
+        public string GetCategoryName(int categoryId)
+        {
+            string categoryName = "";
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = this.conn;
+                cmd.CommandText = "select name from category where id='" + categoryId + "'";
+                MySqlDataReader myreader = cmd.ExecuteReader();
+
+                while (myreader.Read())
+                {
+                    categoryName = myreader.GetString("name");
+                }
+                myreader.Close();
+            }
+            catch (MySqlException ex)
+            {
+                Console.Write(ex.Message);
+            }
+
+            return categoryName;
+        }
+
         public void deleteProduct(int productId)
         {
             MySqlCommand cmd = new();
