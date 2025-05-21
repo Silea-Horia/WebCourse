@@ -9,6 +9,10 @@
         private static Dictionary<int, int> shoppingCart = new();
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString("username") == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             return View("FilterProducts");
         }
 
