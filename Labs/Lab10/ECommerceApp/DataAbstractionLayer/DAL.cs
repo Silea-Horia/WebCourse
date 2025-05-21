@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ECommerceApp.Models;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Bcpg;
 
 namespace ECommerceApp.DataAbstractionLayer
 {
@@ -204,6 +205,36 @@ namespace ECommerceApp.DataAbstractionLayer
             cmd.Connection = this.conn;
             cmd.CommandText = "update product set name='" + productName + "', price=" + price + ", categoryId=" + categoryId + " where id = " + productId;
             cmd.ExecuteNonQuery();
+        }
+
+        public User? GetUser(string username, string password)
+        {
+            User? user = null;
+
+            try
+            {
+                MySqlCommand cmd = new();
+                cmd.Connection = this.conn;
+                cmd.CommandText = "select id from user where username = '" + username + "' and password = '" + password + "'";
+                MySqlDataReader reader = cmd.ExecuteReader();
+                int userId = -1;
+                while (reader.Read())
+                {
+                    userId = reader.GetInt32("id");
+                }
+                if (userId != -1)
+                {
+                    user = new();
+                    user.Id = userId;
+                    user.Username = username;
+                    user.Password = password;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return user;
         }
     }
 }
