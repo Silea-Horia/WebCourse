@@ -54,7 +54,7 @@
 
             foreach (Product product in products)
             {
-                result += "<tr><td onclick=\"selectProduct(" + product.Id + ")\">" + product.Name + "</td><td>" + product.Price + "</td><td><button onclick=\"addToCart(" + product.Id + ")\">+</button><button onclick=\"deleteProduct(" + product.Id + ")\">del</button></td></tr>";
+                result += "<tr><td onclick=\"selectProduct(" + product.Id + ")\">" + product.Name + "</td><td>" + product.Price + "</td><td><button onclick=\"addToCart(" + product.Id + ")\">+</button></td><td><button onclick=\"deleteProduct(" + product.Id + ")\">del</button></td></tr>";
             }
 
             result += "</table>";
@@ -123,10 +123,32 @@
             }
         }
 
-        public void CreateProduct(string productName, int price, string categoryName)
+        public string CreateProduct(string productName, string price, string categoryName)
         {
             DAL dal = new();
-            dal.CreateProduct(productName, price, categoryName);
+            try
+            {
+                foreach (char c in productName)
+                {
+                    if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z'))
+                    {
+                        return "error: product name must contain only letters";
+                    }
+                }
+
+                int parsedPrice;
+                if (!int.TryParse(price, out parsedPrice))
+                {
+                    return "error: price must be a number";
+                }
+
+                dal.CreateProduct(productName, parsedPrice, categoryName);
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+            return "success";
         }
 
         public void DeleteProduct(int productId)
@@ -158,10 +180,32 @@
             return dal.GetCategoryName(dal.GetProduct(productId).CategoryId);
         }
 
-        public void UpdateProduct(int productId, string productName, int price, string categoryName)
+        public string UpdateProduct(int productId, string productName, string price, string categoryName)
         {
             DAL dal = new();
-            dal.UpdateProduct(productId, productName, price, categoryName);
+            try
+            {
+                foreach (char c in productName)
+                {
+                    if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z'))
+                    {
+                        return "error: product name must contain only letters";
+                    }
+                }
+
+                int parsedPrice;
+                if (!int.TryParse(price, out parsedPrice))
+                {
+                    return "error: price must be a number";
+                }
+
+                dal.UpdateProduct(productId, productName, parsedPrice, categoryName);
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+            return "success";
         }
     }
 }

@@ -132,17 +132,10 @@ namespace ECommerceApp.DataAbstractionLayer
         {
             int categoryId = this.GetCategoryId(categoryName);
 
-            try
-            {
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = this.conn;
-                cmd.CommandText = "insert into product (name, price, categoryId) values ('" + productName +"', " + price + ", " + categoryId +")";
-                cmd.ExecuteNonQuery();
-            }
-            catch (MySqlException ex)
-            {
-                Console.Write(ex.Message);
-            }
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = this.conn;
+            cmd.CommandText = "insert into product (name, price, categoryId) values ('" + productName +"', " + price + ", " + categoryId +")";
+            cmd.ExecuteNonQuery();
         }
 
         private int GetCategoryId(string categoryName)
@@ -207,17 +200,10 @@ namespace ECommerceApp.DataAbstractionLayer
         {
             int categoryId = this.GetCategoryId(categoryName);
 
-            try
-            {
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = this.conn;
-                cmd.CommandText = "update product set name='" + productName + "', price=" + price + ", categoryId=" + categoryId + " where id = " + productId;
-                cmd.ExecuteNonQuery();
-            }
-            catch (MySqlException ex)
-            {
-                Console.Write(ex.Message);
-            }
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = this.conn;
+            cmd.CommandText = "update product set name='" + productName + "', price=" + price + ", categoryId=" + categoryId + " where id = " + productId;
+            cmd.ExecuteNonQuery();
         }
     }
 }
