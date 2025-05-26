@@ -1,8 +1,9 @@
-﻿namespace ECommerceApp.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+using ECommerceApp.DataAbstractionLayer;
+using ECommerceApp.Models;
+
+namespace ECommerceApp.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
-    using ECommerceApp.DataAbstractionLayer;
-    using ECommerceApp.Models;
     public class MainController : Controller
     {
         private static int itemsPerPage = 4;
