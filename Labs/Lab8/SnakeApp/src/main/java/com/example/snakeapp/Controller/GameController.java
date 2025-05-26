@@ -73,17 +73,8 @@ public class GameController extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO MERGE
         this.verifyUser(request, response);
-        this.resetState();
-        this.getStateFromDb();
-        request.setAttribute("board", board);
-        request.setAttribute("direction", this.snake.getDirection());
-        request.setAttribute("state", "alive");
-        request.getRequestDispatcher("/game.jsp").forward(request, response);
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (this.user == null) this.doPost(request, response);
 
         this.getStateFromDb();
 
@@ -118,6 +109,10 @@ public class GameController extends HttpServlet {
         request.setAttribute("direction", this.snake.getDirection());
 
         request.getRequestDispatcher("/game.jsp").forward(request, response);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request, response);
     }
 
     private boolean isSnakeDead() {

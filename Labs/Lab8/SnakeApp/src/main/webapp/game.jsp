@@ -23,7 +23,7 @@
             state = "alive";
         } %>
     <p>You are <%=state%></p>
-    <form action="${pageContext.request.contextPath}/game" method="get">
+    <form action="${pageContext.request.contextPath}/game" method="post">
         <input type="submit" style="visibility:  <%=(state.equals("dead") ? "visible" : "hidden")%>" name="reset" value="reset"/>
     </form>
     <table>
@@ -51,7 +51,7 @@
             %>
         </tbody>
     </table>
-    <form action="${pageContext.request.contextPath}/game" method="get">
+    <form action="${pageContext.request.contextPath}/game" method="post">
         <%
             String direction = (String) request.getAttribute("direction");
             String upDisable = "";
