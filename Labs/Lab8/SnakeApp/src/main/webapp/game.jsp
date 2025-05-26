@@ -15,6 +15,14 @@
 </head>
 <body>
     <p>User: <%=((User)session.getAttribute("user")).getUsername()%></p>
+    <%
+        String state;
+        if (Objects.equals((String) request.getAttribute("state"), "dead")) {
+            state = "dead";
+        } else {
+            state = "alive";
+        } %>
+    <p>You are <%=state%></p>
     <table>
         <tbody>
             <%

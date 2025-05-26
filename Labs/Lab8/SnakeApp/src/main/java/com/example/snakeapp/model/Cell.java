@@ -44,4 +44,8 @@ public class Cell {
     public void setCol(int col) {
         this.col = col;
     }
+
+    public boolean isOutOfBounds(int minRow, int minCol, int maxRow, int maxCol) {
+        return this.row < minRow || this.row > maxRow || this.col < minCol || this.col > maxCol;
+    }
 }

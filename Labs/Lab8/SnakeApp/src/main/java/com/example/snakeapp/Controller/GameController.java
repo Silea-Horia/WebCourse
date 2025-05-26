@@ -16,6 +16,9 @@ import java.sql.*;
 
 @WebServlet("/game")
 public class GameController extends HttpServlet {
+    private static final int NO_ROWS = 8;
+    private static final int NO_COLS = 8;
+
     private Cell[][] board;
     private Snake snake;
     private Statement stmt;
@@ -27,9 +30,9 @@ public class GameController extends HttpServlet {
     }
 
     private void createBoard() {
-        this.board = new Cell[8][8];
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        this.board = new Cell[NO_ROWS][NO_COLS];
+        for (int i = 0; i < NO_ROWS; i++) {
+            for (int j = 0; j < NO_COLS; j++) {
                 this.board[i][j] = new Cell(0, "board", i, j);
             }
         }
@@ -72,8 +75,11 @@ public class GameController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.verifyUser(request, response);
         this.getStateFromDb();
+        this.resetState();
+        this.getStateFromDb();
         request.setAttribute("board", board);
         request.setAttribute("direction", this.snake.getDirection());
+        request.setAttribute("state", "alive");
         request.getRequestDispatcher("/game.jsp").forward(request, response);
     }
 
@@ -89,13 +95,29 @@ public class GameController extends HttpServlet {
         }
 
 
-        // update snake
-        this.writeStateToDb();
-        this.createBoard();
-        this.getStateFromDb();
+
+        if (this.isSnakeDead()) {
+            request.setAttribute("state", "dead");
+        } else {
+            request.setAttribute("state", "alive");
+            // update snake
+            this.writeStateToDb();
+            this.createBoard();
+            this.getStateFromDb();
+        }
         request.setAttribute("board", board);
         request.setAttribute("direction", this.snake.getDirection());
+
         request.getRequestDispatcher("/game.jsp").forward(request, response);
+    }
+
+    private boolean isSnakeDead() {
+        for (Cell c : this.snake.getCells()) {
+            if (c.isOutOfBounds(0, 0, NO_ROWS, NO_COLS)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void verifyUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
