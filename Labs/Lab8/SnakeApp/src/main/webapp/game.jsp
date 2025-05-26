@@ -23,6 +23,9 @@
             state = "alive";
         } %>
     <p>You are <%=state%></p>
+    <form action="${pageContext.request.contextPath}/game" method="get">
+        <input type="submit" style="visibility:  <%=(state.equals("dead") ? "visible" : "hidden")%>" name="reset" value="reset"/>
+    </form>
     <table>
         <tbody>
             <%

@@ -74,7 +74,6 @@ public class GameController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.verifyUser(request, response);
-        this.getStateFromDb();
         this.resetState();
         this.getStateFromDb();
         request.setAttribute("board", board);
@@ -84,6 +83,12 @@ public class GameController extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (request.getParameter("reset") != null) {
+            this.getStateFromDb();
+            this.snake.reset();
+            this.writeStateToDb();
+        }
+
         if (request.getParameter("up") != null) {
             this.snake.moveUp();
         } else if (request.getParameter("down") != null) {
@@ -93,7 +98,6 @@ public class GameController extends HttpServlet {
         } else if (request.getParameter("right") != null) {
             this.snake.moveRight();
         }
-
 
 
         if (this.isSnakeDead()) {
@@ -113,7 +117,7 @@ public class GameController extends HttpServlet {
 
     private boolean isSnakeDead() {
         for (Cell c : this.snake.getCells()) {
-            if (c.isOutOfBounds(0, 0, NO_ROWS, NO_COLS)) {
+            if (c.isOutOfBounds(0, 0, NO_ROWS - 1, NO_COLS - 1)) {
                 return true;
             }
         }
