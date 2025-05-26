@@ -83,10 +83,13 @@ public class GameController extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (this.user == null) this.doPost(request, response);
+
+        this.getStateFromDb();
+
         if (request.getParameter("reset") != null) {
+            this.resetState();
             this.getStateFromDb();
-            this.snake.reset();
-            this.writeStateToDb();
         }
 
         if (request.getParameter("up") != null) {
@@ -99,16 +102,18 @@ public class GameController extends HttpServlet {
             this.snake.moveRight();
         }
 
-
         if (this.isSnakeDead()) {
             request.setAttribute("state", "dead");
+            this.snake.setState("dead");
         } else {
             request.setAttribute("state", "alive");
-            // update snake
+            this.snake.setState("alive");
+
             this.writeStateToDb();
             this.createBoard();
             this.getStateFromDb();
         }
+
         request.setAttribute("board", board);
         request.setAttribute("direction", this.snake.getDirection());
 
@@ -128,7 +133,7 @@ public class GameController extends HttpServlet {
         HttpSession session = request.getSession();
         this.user = (User) session.getAttribute("user");
         if (user == null) {
-            RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
             rd.forward(request, response);
         }
     }
@@ -159,6 +164,16 @@ public class GameController extends HttpServlet {
 
             this.snake.setDirection(rs.getString("type"));
 
+            rs = stmt.executeQuery(
+                    "select state " +
+                            "from state " +
+                            "where userId = " + this.user.getId()
+            );
+
+            rs.next();
+
+            this.snake.setDirection(rs.getString("type"));
+
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -179,6 +194,11 @@ public class GameController extends HttpServlet {
                             "update direction " +
                                 "set type = '" + this.snake.getDirection() + "' " +
                                 "where userId = " + this.user.getId()
+            );
+            stmt.executeUpdate(
+                        "update state " +
+                            "set state = '" + this.snake.getState() + "' " +
+                            "where userId = " + this.user.getId()
             );
         } catch (SQLException e) {
             e.printStackTrace();

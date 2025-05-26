@@ -5,19 +5,23 @@ import java.util.ArrayList;
 public class Snake {
     private ArrayList<Cell> cells;
     private String direction;
+    private String state;
 
     public Snake() {
         this.cells = new ArrayList<>();
         this.direction = "up";
+        this.state = "alive";
     }
 
-    public Snake(String direction) {
+    public Snake(String direction, String state) {
         this.cells = new ArrayList<>();
         this.direction = direction;
+        this.state = state;
     }
 
     public void reset() {
         this.direction = "up";
+        this.state = "alive";
         this.cells.getFirst().setCol(3);
         this.cells.getFirst().setRow(3);
         this.cells.get(1).setCol(3);
@@ -86,5 +90,13 @@ public class Snake {
 
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }
