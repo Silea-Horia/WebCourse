@@ -81,12 +81,13 @@ public class GameController extends HttpServlet {
         if (request.getParameter("up") != null) {
             this.snake.moveUp();
         } else if (request.getParameter("down") != null) {
-            // move down
+            this.snake.moveDown();
         } else if (request.getParameter("left") != null) {
-            // move left
+            this.snake.moveLeft();
         } else if (request.getParameter("right") != null) {
-            // move right
+            this.snake.moveRight();
         }
+
 
         // update snake
         this.writeStateToDb();
