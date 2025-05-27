@@ -8,7 +8,7 @@
 <form action="login-controller" method="post">
     Enter username : <input type="text" name="username"> <BR>
     Enter password : <input type="password" name="password"> <BR>
-    <input type="submit" value="Login"/>
+    <input type="submit" name="login" value="login"/>
 </form>
 </body>
 </html>

@@ -80,6 +80,16 @@ public class GameController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.verifyUser(request, response);
 
+        if (request.getParameter("login") != null) {
+            this.resetState();
+        }
+
+        if (request.getParameter("logout") != null) {
+            request.getSession().invalidate();
+            RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
+            rd.forward(request, response);
+        }
+
         this.getStateFromDb();
 
         if (request.getParameter("reset") != null) {

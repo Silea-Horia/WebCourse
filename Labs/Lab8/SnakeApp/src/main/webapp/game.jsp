@@ -15,6 +15,9 @@
 </head>
 <body>
     <p>User: <%=((User)session.getAttribute("user")).getUsername()%></p>
+    <form>
+        <input type="submit" name="logout" value="logout"/>
+    </form>
     <%
         String state;
         if (Objects.equals(request.getAttribute("state"), "dead")) {
