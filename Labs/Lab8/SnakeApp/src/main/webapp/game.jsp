@@ -7,7 +7,7 @@
   Time: 08:50
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
     <title>Snake Game</title>
@@ -17,7 +17,7 @@
     <p>User: <%=((User)session.getAttribute("user")).getUsername()%></p>
     <%
         String state;
-        if (Objects.equals((String) request.getAttribute("state"), "dead")) {
+        if (Objects.equals(request.getAttribute("state"), "dead")) {
             state = "dead";
         } else {
             state = "alive";
@@ -41,6 +41,8 @@
                             color = "lawngreen";
                         } else if (Objects.equals(cell.getType(), "body")) {
                             color = "forestgreen";
+                        } else if (Objects.equals(cell.getType(), "obstacle")) {
+                            color = "gray";
                         }
 
                         %><td style="background: <%=color%>;"></td><%

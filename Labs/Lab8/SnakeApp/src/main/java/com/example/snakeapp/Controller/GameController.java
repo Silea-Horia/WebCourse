@@ -30,12 +30,17 @@ public class GameController extends HttpServlet {
     }
 
     private void createBoard() {
-        this.board = new Cell[NO_ROWS][NO_COLS];
+        board = new Cell[NO_ROWS][NO_COLS];
         for (int i = 0; i < NO_ROWS; i++) {
             for (int j = 0; j < NO_COLS; j++) {
-                this.board[i][j] = new Cell(0, "board", i, j);
+                board[i][j] = new Cell(0, "board", i, j);
             }
         }
+
+        board[1][1].setType("obstacle");
+        board[2][4].setType("obstacle");
+        board[4][1].setType("obstacle");
+        board[3][6].setType("obstacle");
     }
 
     private void resetState() {
@@ -73,7 +78,6 @@ public class GameController extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // TODO MERGE
         this.verifyUser(request, response);
 
         this.getStateFromDb();
@@ -116,11 +120,16 @@ public class GameController extends HttpServlet {
     }
 
     private boolean isSnakeDead() {
-        for (Cell c : this.snake.getCells()) {
+        for (Cell c : snake.getCells()) {
             if (c.isOutOfBounds(0, 0, NO_ROWS - 1, NO_COLS - 1)) {
                 return true;
             }
+
+            if (board[c.getRow()][c.getCol()].getType().equals("obstacle")) {
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -167,7 +176,7 @@ public class GameController extends HttpServlet {
 
             rs.next();
 
-            this.snake.setDirection(rs.getString("type"));
+            this.snake.setState(rs.getString("state"));
 
             rs.close();
         } catch (SQLException e) {
