@@ -18,6 +18,7 @@
     <form>
         <input type="submit" name="logout" value="logout"/>
     </form>
+    <p>Logged in for: <%=request.getAttribute("minuteDiff")%>:<%=request.getAttribute("secondDiff")%></p>
     <%
         String state;
         if (Objects.equals(request.getAttribute("state"), "dead")) {

@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @WebServlet("/game")
 public class GameController extends HttpServlet {
@@ -24,9 +26,14 @@ public class GameController extends HttpServlet {
     private Statement stmt;
     private User user;
 
+    private LocalDateTime lastDelta;
+    private long timeSinceDelta;
+    private long timeInGame;
+
     public void init() {
         this.connect();
         this.createBoard();
+        this.lastDelta = LocalDateTime.now();
     }
 
     private void createBoard() {
@@ -85,6 +92,7 @@ public class GameController extends HttpServlet {
         }
 
         if (request.getParameter("logout") != null) {
+            this.writeStateToDb();
             request.getSession().invalidate();
             RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
             rd.forward(request, response);
@@ -119,10 +127,20 @@ public class GameController extends HttpServlet {
             this.getStateFromDb();
         }
 
+        long minuteDiff = timeInGame / 1000 / 60;
+        long secondDiff = timeInGame / 1000 % 60;
+
         request.setAttribute("board", board);
         request.setAttribute("direction", this.snake.getDirection());
+        request.setAttribute("minuteDiff", minuteDiff);
+        request.setAttribute("secondDiff", secondDiff);
 
         request.getRequestDispatcher("/game.jsp").forward(request, response);
+    }
+
+    private long getMiliSecondDiff() {
+        LocalDateTime now = LocalDateTime.now();
+        return this.lastDelta.until(now, ChronoUnit.MILLIS);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -188,6 +206,16 @@ public class GameController extends HttpServlet {
 
             this.snake.setState(rs.getString("state"));
 
+            rs = stmt.executeQuery(
+                    "select timeInGame " +
+                            "from users " +
+                            "where id = " + this.user.getId()
+            );
+
+            rs.next();
+
+            this.timeInGame = rs.getLong("timeInGame");
+
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -213,6 +241,13 @@ public class GameController extends HttpServlet {
                         "update state " +
                             "set state = '" + this.snake.getState() + "' " +
                             "where userId = " + this.user.getId()
+            );
+            this.timeSinceDelta = this.getMiliSecondDiff();
+            this.lastDelta = LocalDateTime.now();
+            stmt.executeUpdate(
+                "update users " +
+                    "set timeInGame = timeInGame + " + this.timeSinceDelta + " " +
+                    "where id = " + this.user.getId()
             );
         } catch (SQLException e) {
             e.printStackTrace();
