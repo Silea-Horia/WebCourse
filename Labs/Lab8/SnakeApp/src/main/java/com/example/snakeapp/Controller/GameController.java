@@ -69,6 +69,11 @@ public class GameController extends HttpServlet {
                             "set type = 'up' " +
                             "where userId = " + this.user.getId()
             );
+            stmt.executeUpdate(
+                    "update state " +
+                            "set state = 'alive' " +
+                            "where userId = " + this.user.getId()
+            );
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -105,23 +110,30 @@ public class GameController extends HttpServlet {
             this.getStateFromDb();
         }
 
-        if (request.getParameter("up") != null) {
-            this.snake.moveUp();
-        } else if (request.getParameter("down") != null) {
-            this.snake.moveDown();
-        } else if (request.getParameter("left") != null) {
-            this.snake.moveLeft();
-        } else if (request.getParameter("right") != null) {
-            this.snake.moveRight();
+        if (this.snake.getState().equals("alive")) {
+            if (request.getParameter("up") != null) {
+                this.snake.moveUp();
+            } else if (request.getParameter("down") != null) {
+                this.snake.moveDown();
+            } else if (request.getParameter("left") != null) {
+                this.snake.moveLeft();
+            } else if (request.getParameter("right") != null) {
+                this.snake.moveRight();
+            }
         }
 
-        if (this.isSnakeDead()) {
+        if (this.isSnakeDead() || this.snake.getState().equals("dead")) {
             request.setAttribute("state", "dead");
             this.snake.setState("dead");
-        } else {
-            request.setAttribute("state", "alive");
-            this.snake.setState("alive");
 
+            try {
+                stmt.executeUpdate(
+                        "update state " +
+                                "set state = '" + this.snake.getState() + "' " +
+                                "where userId = " + this.user.getId()
+                );
+            } catch (SQLException _) {}
+        } else {
             this.writeStateToDb();
             this.createBoard();
             this.getStateFromDb();
