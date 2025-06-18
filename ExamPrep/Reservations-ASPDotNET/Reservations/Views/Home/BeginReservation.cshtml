@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewData["Title"] = "BeginReservation";
+}
+
+<h1>BeginReservation</h1>
+
+<form asp-action="GetFlights" method="get">
+    <input type="submit" value="Flights" />
+</form>
+
+<form asp-action="GetHotels" method="get">
+    <input type="submit" value="Hotels" />
+</form>
+
+<form asp-action="CancelReservations" method="get">
+    <input type="submit" value="Cancel" />
+</form>
+
+@if (ViewData["Page"] != null && (string?)ViewData["Page"] == "Flights" && ViewData["Flights"] != null)
+{
+    <h2>Available Flights</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Destination</th>
+                <th>Available Seats</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Flight flight in (List<Flight>)ViewData["Flights"])
+            {
+                <tr>
+                    <td>@flight.Date</td>
+                    <td>@flight.DestinationCity</td>
+                    <td>@flight.AvailableSeats</td>
+                    <td>
+                        <form asp-action="MakeReservation" method="post">
+                            <input type="hidden" name="id" value="@flight.FlightID" />
+                            <input type="hidden" name="type" value="flight" />
+                            <input type="submit" value="Reserve" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+} else if (ViewData["Page"] != null && (string?)ViewData["Page"] == "Hotels" && ViewData["Hotels"] != null)
+{
+    <h2>Available Hotels</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>City</th>
+                <th>Available Rooms</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Hotel hotel in (List<Hotel>)ViewData["Hotels"])
+            {
+                <tr>
+                    <td>@hotel.HotelName</td>
+                    <td>@hotel.Date</td>
+                    <td>@hotel.City</td>
+                    <td>@hotel.AvailableRooms</td>
+                    <td>
+                        <form asp-action="MakeReservation" method="post">
+                            <input type="hidden" name="id" value="@hotel.HotelID" />
+                            <input type="hidden" name="type" value="hotel" />
+                            <input type="submit" value="Reserve" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
