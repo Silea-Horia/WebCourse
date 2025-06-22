@@ -38,8 +38,7 @@
               "RelativeToolTip": "Models\\Hotel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T05:38:00.747Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-18T05:38:00.747Z"
             },
             {
               "$type": "Document",
@@ -51,8 +50,7 @@
               "RelativeToolTip": "DataAbstractionLayer\\DAL.cs",
               "ViewState": "AgIAAF0AAAAAAAAAAAAtwHcAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-14T10:09:30.064Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-14T10:09:30.064Z"
             },
             {
               "$type": "Document",
@@ -62,7 +60,7 @@
               "RelativeDocumentMoniker": "Views\\Home\\BeginReservation.cshtml",
               "ToolTip": "C:\\Users\\horia\\Faculta\\Sem4\\WebProgramming\\ExamPrep\\Reservations-ASPDotNET\\Reservations\\Views\\Home\\BeginReservation.cshtml",
               "RelativeToolTip": "Views\\Home\\BeginReservation.cshtml",
-              "ViewState": "AgIAADEAAAAAAAAAAAAIwFEAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAADQAAAAAAAAAAAAwwFEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-06-14T10:08:01.341Z",
               "EditorCaption": ""
@@ -77,8 +75,7 @@
               "RelativeToolTip": "Controllers\\HomeController.cs",
               "ViewState": "AgIAAEwAAAAAAAAAAAAtwFoAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-14T09:46:02.333Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-14T09:46:02.333Z"
             }
           ]
         }
